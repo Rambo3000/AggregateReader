@@ -44,9 +44,13 @@ namespace AggregateReader
             DataGridViewCellStyle dataGridViewCellStyle11 = new DataGridViewCellStyle();
             txtXMLInput = new RichTextBox();
             button1 = new Button();
-            treAggregateEntities = new TreeView();
+            treInstanceOverviewHierarchical = new TreeView();
             scTreeviewAndOthers = new SplitContainer();
             grpAggregateContent = new GroupBox();
+            tabInstanceOverview = new TabControl();
+            tabPageHierarchical = new TabPage();
+            tabPageAlphabetically = new TabPage();
+            treInstanceOverviewAlphabetically = new TreeView();
             groupBox1 = new GroupBox();
             lblRelation = new Label();
             scAttributesAndOthers = new SplitContainer();
@@ -76,6 +80,9 @@ namespace AggregateReader
             scTreeviewAndOthers.Panel2.SuspendLayout();
             scTreeviewAndOthers.SuspendLayout();
             grpAggregateContent.SuspendLayout();
+            tabInstanceOverview.SuspendLayout();
+            tabPageHierarchical.SuspendLayout();
+            tabPageAlphabetically.SuspendLayout();
             groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)scAttributesAndOthers).BeginInit();
             scAttributesAndOthers.Panel1.SuspendLayout();
@@ -116,15 +123,15 @@ namespace AggregateReader
             button1.UseVisualStyleBackColor = true;
             button1.Click += Button1_Click;
             // 
-            // treAggregateEntities
+            // treInstanceOverviewHierarchical
             // 
-            treAggregateEntities.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            treAggregateEntities.BorderStyle = BorderStyle.None;
-            treAggregateEntities.Location = new Point(6, 22);
-            treAggregateEntities.Name = "treAggregateEntities";
-            treAggregateEntities.Size = new Size(388, 502);
-            treAggregateEntities.TabIndex = 3;
-            treAggregateEntities.AfterSelect += TreAggregateEntities_AfterSelect;
+            treInstanceOverviewHierarchical.BorderStyle = BorderStyle.None;
+            treInstanceOverviewHierarchical.Dock = DockStyle.Fill;
+            treInstanceOverviewHierarchical.Location = new Point(3, 3);
+            treInstanceOverviewHierarchical.Name = "treInstanceOverviewHierarchical";
+            treInstanceOverviewHierarchical.Size = new Size(380, 474);
+            treInstanceOverviewHierarchical.TabIndex = 3;
+            treInstanceOverviewHierarchical.AfterSelect += TreAggregateEntities_AfterSelect;
             // 
             // scTreeviewAndOthers
             // 
@@ -145,14 +152,57 @@ namespace AggregateReader
             // 
             // grpAggregateContent
             // 
-            grpAggregateContent.Controls.Add(treAggregateEntities);
+            grpAggregateContent.Controls.Add(tabInstanceOverview);
             grpAggregateContent.Dock = DockStyle.Fill;
             grpAggregateContent.Location = new Point(0, 0);
             grpAggregateContent.Name = "grpAggregateContent";
             grpAggregateContent.Size = new Size(400, 530);
             grpAggregateContent.TabIndex = 4;
             grpAggregateContent.TabStop = false;
-            grpAggregateContent.Text = "Aggregate hierarchy";
+            grpAggregateContent.Text = "Instance overview";
+            // 
+            // tabInstanceOverview
+            // 
+            tabInstanceOverview.Controls.Add(tabPageAlphabetically);
+            tabInstanceOverview.Controls.Add(tabPageHierarchical);
+            tabInstanceOverview.Dock = DockStyle.Fill;
+            tabInstanceOverview.Location = new Point(3, 19);
+            tabInstanceOverview.Name = "tabInstanceOverview";
+            tabInstanceOverview.SelectedIndex = 0;
+            tabInstanceOverview.Size = new Size(394, 508);
+            tabInstanceOverview.TabIndex = 4;
+            // 
+            // tabPageHierarchical
+            // 
+            tabPageHierarchical.Controls.Add(treInstanceOverviewHierarchical);
+            tabPageHierarchical.Location = new Point(4, 24);
+            tabPageHierarchical.Name = "tabPageHierarchical";
+            tabPageHierarchical.Padding = new Padding(3);
+            tabPageHierarchical.Size = new Size(386, 480);
+            tabPageHierarchical.TabIndex = 0;
+            tabPageHierarchical.Text = "Hierarchically";
+            tabPageHierarchical.UseVisualStyleBackColor = true;
+            // 
+            // tabPageAlphabetically
+            // 
+            tabPageAlphabetically.Controls.Add(treInstanceOverviewAlphabetically);
+            tabPageAlphabetically.Location = new Point(4, 24);
+            tabPageAlphabetically.Name = "tabPageAlphabetically";
+            tabPageAlphabetically.Padding = new Padding(3);
+            tabPageAlphabetically.Size = new Size(386, 480);
+            tabPageAlphabetically.TabIndex = 1;
+            tabPageAlphabetically.Text = "Alphabetically";
+            tabPageAlphabetically.UseVisualStyleBackColor = true;
+            // 
+            // treInstanceOverviewAlphabetically
+            // 
+            treInstanceOverviewAlphabetically.BorderStyle = BorderStyle.None;
+            treInstanceOverviewAlphabetically.Dock = DockStyle.Fill;
+            treInstanceOverviewAlphabetically.Location = new Point(3, 3);
+            treInstanceOverviewAlphabetically.Name = "treInstanceOverviewAlphabetically";
+            treInstanceOverviewAlphabetically.Size = new Size(380, 474);
+            treInstanceOverviewAlphabetically.TabIndex = 4;
+            treInstanceOverviewAlphabetically.AfterSelect += TreAggregateEntities_AfterSelect;
             // 
             // groupBox1
             // 
@@ -484,6 +534,9 @@ namespace AggregateReader
             ((System.ComponentModel.ISupportInitialize)scTreeviewAndOthers).EndInit();
             scTreeviewAndOthers.ResumeLayout(false);
             grpAggregateContent.ResumeLayout(false);
+            tabInstanceOverview.ResumeLayout(false);
+            tabPageHierarchical.ResumeLayout(false);
+            tabPageAlphabetically.ResumeLayout(false);
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
             scAttributesAndOthers.Panel1.ResumeLayout(false);
@@ -509,7 +562,7 @@ namespace AggregateReader
 
         private RichTextBox txtXMLInput;
         private Button button1;
-        private TreeView treAggregateEntities;
+        private TreeView treInstanceOverviewHierarchical;
         private SplitContainer scTreeviewAndOthers;
         private Label lblEntityValue;
         private Label lblId;
@@ -536,5 +589,9 @@ namespace AggregateReader
         private GroupBox groupBox1;
         private DataGridViewTextBoxColumn Attribute;
         private DataGridViewTextBoxColumn Value;
+        private TabControl tabInstanceOverview;
+        private TabPage tabPageHierarchical;
+        private TabPage tabPageAlphabetically;
+        private TreeView treInstanceOverviewAlphabetically;
     }
 }

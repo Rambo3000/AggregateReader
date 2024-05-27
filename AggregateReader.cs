@@ -44,7 +44,8 @@ namespace AggregateReader
         }
         public void ClearTreeview()
         {
-            treAggregateEntities.Nodes.Clear();
+            treInstanceOverviewHierarchical.Nodes.Clear();
+            treInstanceOverviewAlphabetically.Nodes.Clear();
         }
         public void ClearInstance()
         {
@@ -89,7 +90,8 @@ namespace AggregateReader
                 BlueriqAggregate aggregate = BlueriqXmlAggregateParser.ParseXmlToAggregate(xmlAggregate);
                 PopulateRelationChildren(aggregate);
 
-                BuildTreeView(treAggregateEntities, aggregate);
+                BuildTreeViewHierarchical(treInstanceOverviewHierarchical, aggregate);
+                BuildTreeViewAlphabetically(treInstanceOverviewAlphabetically, aggregate);
             }
             catch (Exception)
             {
@@ -119,7 +121,7 @@ namespace AggregateReader
                 }
             }
         }
-        public static void BuildTreeView(TreeView treeView, BlueriqAggregate aggregate)
+        public static void BuildTreeViewHierarchical(TreeView treeView, BlueriqAggregate aggregate)
         {
             treeView.SuspendDrawing();
 
@@ -140,6 +142,35 @@ namespace AggregateReader
                 entityNode.Tag = entity;
                 rootNode.Nodes.Add(entityNode);
                 PopulateEntityNode(entityNode, entity);
+            }
+
+            treeView.Nodes[0].Expand();
+            treeView.ResumeDrawing();
+        }
+        public static void BuildTreeViewAlphabetically(TreeView treeView, BlueriqAggregate aggregate)
+        {
+            treeView.SuspendDrawing();
+
+            List<IGrouping<string, BlueriqEntity>> groupedEntities = aggregate.Entities.GroupBy(e => e.Type).ToList();
+
+            TreeNode rootNode = new(aggregate.Type);
+            treeView.Nodes.Add(rootNode);
+
+            foreach (IGrouping<string, BlueriqEntity> group in groupedEntities)
+            {
+                TreeNodeCollection treeNodes = rootNode.Nodes;
+
+                if (group.Count() > 1)
+                {
+                    TreeNode treeNode = new TreeNode($"{group.Key} ({group.Count()})");
+                    treeNodes.Add(treeNode);
+                    treeNodes = treeNode.Nodes;
+                }
+                
+                foreach (BlueriqEntity entity in group)
+                {
+                    treeNodes.Add(CreateEntityNode(entity));
+                }
             }
 
             treeView.Nodes[0].Expand();
@@ -238,7 +269,7 @@ namespace AggregateReader
         {
             ClearInstance();
 
-            if (e.Node == null) return;
+            if (e.Node == null || e.Node.Tag == null) return;
 
             if (e.Node.Tag.GetType() == typeof(BlueriqAggregate)) return;
             if (e.Node.Tag.GetType() == typeof(BlueriqAttribute)) return;
@@ -260,7 +291,7 @@ namespace AggregateReader
 
             if (entity == null) return;
 
-            if (relation == null && e.Node.Parent.Tag.GetType() == typeof(BlueriqRelation))
+            if (relation == null && e.Node.Parent.Tag != null && e.Node.Parent.Tag.GetType() == typeof(BlueriqRelation))
             {
                 nodeInitial = e.Node.Parent;
             }
@@ -269,16 +300,19 @@ namespace AggregateReader
             TreeNode nodeLoop = nodeInitial;
             while (nodeLoop != null)
             {
-                if (nodeLoop.Tag.GetType() == typeof(BlueriqRelation))
+                if (nodeLoop.Tag != null)
                 {
-                    relationPath = string.Join(".", ((BlueriqRelation)nodeLoop.Tag).Name, relationPath);
-                }
-                if (nodeLoop.Tag.GetType() == typeof(BlueriqEntity))
-                {
-                    BlueriqEntity entityLoop = (BlueriqEntity)nodeLoop.Tag;
-                    if (entityLoop.ParentRelations == null || entityLoop.ParentRelations.Count == 0)
+                    if (nodeLoop.Tag.GetType() == typeof(BlueriqRelation))
                     {
-                        relationPath = entityLoop.Type + "." + relationPath;
+                        relationPath = string.Join(".", ((BlueriqRelation)nodeLoop.Tag).Name, relationPath);
+                    }
+                    if (nodeLoop.Tag.GetType() == typeof(BlueriqEntity))
+                    {
+                        BlueriqEntity entityLoop = (BlueriqEntity)nodeLoop.Tag;
+                        if (entityLoop.ParentRelations == null || entityLoop.ParentRelations.Count == 0)
+                        {
+                            relationPath = entityLoop.Type + "." + relationPath;
+                        }
                     }
                 }
                 nodeLoop = nodeLoop.Parent;
@@ -358,11 +392,12 @@ namespace AggregateReader
                 BlueriqRelation? relation = dataGridView.Rows[e.RowIndex].Tag as BlueriqRelation;
 
                 // Handle the button click event
-                SelectTreeViewNode(treAggregateEntities, relation);
+                SelectTreeViewNode(treInstanceOverviewHierarchical, relation);
+                
             }
         }
 
-        private static void SelectTreeViewNode(TreeView treeView, BlueriqRelation? relation)
+        private void SelectTreeViewNode(TreeView treeView, BlueriqRelation? relation)
         {
             // Iterate through all nodes in the TreeView
             foreach (TreeNode node in treeView.Nodes)
@@ -387,6 +422,7 @@ namespace AggregateReader
                         }
                     }
                     treeView.Focus();
+                    tabInstanceOverview.SelectedIndex = 1;
                     break;
                 }
             }
