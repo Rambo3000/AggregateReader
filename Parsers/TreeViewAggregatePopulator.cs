@@ -34,27 +34,30 @@ namespace AggregateReader.Parsers
             treeView.Nodes[0].Expand();
             treeView.ResumeDrawing();
         }
-        public static void BuildTreeViewHierarchical(TreeView treeView, BlueriqAggregate aggregate)
+        public static void BuildTreeViewHierarchical(TreeView treeView, BlueriqAggregate aggregate, bool rootItemsOnly)
         {
             treeView.SuspendDrawing();
 
             // Create root node for the aggregate
-            TreeNode rootNode = new(aggregate.Type)
+            TreeNode rootNode = new TreeNode(aggregate.Type)
             {
                 Tag = aggregate
             };
             treeView.Nodes.Add(rootNode);
 
-            // Populate tree recursively
+            // Attach the BeforeExpand event handler
+            treeView.BeforeExpand += TreeView_BeforeExpand;
+
+            // Populate tree with root entities only
             foreach (var entity in aggregate.Entities)
             {
-                //Only show root items to simplify the view
-                if (entity.ParentRelations != null && entity.ParentRelations.Count > 0) continue;
-
+                if (rootItemsOnly = true && !entity.IsRootItem) continue;
+                
+                entity.OnlyOneInstanceOfThisTypeExists
+                
                 TreeNode entityNode = CreateEntityNode(entity);
-                entityNode.Tag = entity;
                 rootNode.Nodes.Add(entityNode);
-                PopulateEntityNode(entityNode, entity);
+                AddPlaceholderNodes(entityNode, entity);
             }
 
             treeView.Nodes[0].Expand();
@@ -63,11 +66,49 @@ namespace AggregateReader.Parsers
 
         private static TreeNode CreateEntityNode(BlueriqEntity entity)
         {
-            TreeNode entityNode = new(entity.ToString())
+            return new TreeNode(entity.ToString())
             {
                 Tag = entity // Store entity object in the node's Tag property for future reference
             };
-            return entityNode;
+        }
+
+        private static void AddPlaceholderNodes(TreeNode entityNode, BlueriqEntity entity)
+        {
+            foreach (var relation in entity.Relations)
+            {
+                TreeNode relationNode = new TreeNode(relation.Name)
+                {
+                    Tag = relation
+                };
+
+                // Add a placeholder node if there are children
+                if (relation.Children != null && relation.Children.Count > 0)
+                {
+                    relationNode.Nodes.Add(new TreeNode("Loading..."));
+                }
+
+                entityNode.Nodes.Add(relationNode);
+            }
+        }
+        private static void TreeView_BeforeExpand(object sender, TreeViewCancelEventArgs e)
+        {
+            TreeNode currentNode = e.Node;
+
+            // If the node has a placeholder, populate its children
+            if (currentNode.Nodes.Count == 1 && currentNode.Nodes[0].Text == "Loading...")
+            {
+                currentNode.Nodes.Clear(); // Remove the placeholder
+
+                if (currentNode.Tag is BlueriqRelation relation)
+                {
+                    foreach (var childEntity in relation.Children)
+                    {
+                        TreeNode childEntityNode = CreateEntityNode(childEntity);
+                        currentNode.Nodes.Add(childEntityNode);
+                        AddPlaceholderNodes(childEntityNode, childEntity);
+                    }
+                }
+            }
         }
 
         private static void PopulateEntityNode(TreeNode entityNode, BlueriqEntity entity)
