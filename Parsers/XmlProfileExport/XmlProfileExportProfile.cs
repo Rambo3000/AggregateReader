@@ -1,9 +1,9 @@
 ﻿using System.Xml.Serialization;
 
-namespace AggregateReader.Parsers.BlueriqProfileExportXml
+namespace AggregateReader.Parsers.XmlProfileExport
 {
     [XmlRoot("profile")]
-    public class BlueriqProfileExportXmlProfile
+    public class XmlProfileExportProfile
     {
 		[XmlAttribute("appVersion")]
 		public string? AppVersion { get; set; }
@@ -12,6 +12,6 @@ namespace AggregateReader.Parsers.BlueriqProfileExportXml
 		public string? AppName { get; set; }
 
 		[XmlElement("entity")]
-		public List<BlueriqProfileExportXmlEntity>? Entities { get; set; }
+		public List<XmlProfileExportEntity>? Entities { get; set; }
 	}
 }

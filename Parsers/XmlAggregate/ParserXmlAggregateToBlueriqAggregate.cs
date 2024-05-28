@@ -1,26 +1,25 @@
 ﻿using AggregateReader.BlueriqObjects;
-using AggregateReader.Parsers.BlueriqXml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 
-namespace AggregateReader.Parsers
+namespace AggregateReader.Parsers.XmlAggregate
 {
-    public class ParserXmlAggregate : IBlueriqParser
+    public class ParserXmlAggregateToBlueriqAggregate : IBlueriqParser
     {
         bool IBlueriqParser.CanIdentifyRootNodes => true;
         public BlueriqAggregate Parse(string xml)
         {
-            BlueriqXmlAggregate? xmlAggregate;
+            XmlAggregate? xmlAggregate;
             using TextReader reader = new StringReader(xml);
-            XmlSerializer serializer = new(typeof(BlueriqXmlAggregate));
-            xmlAggregate = serializer.Deserialize(reader) as BlueriqXmlAggregate;
+            XmlSerializer serializer = new(typeof(XmlAggregate));
+            xmlAggregate = serializer.Deserialize(reader) as XmlAggregate;
 
             if (xmlAggregate == null) return null;
 
             return ParseXmlToAggregate(xmlAggregate);
         }
 
-        public BlueriqAggregate ParseXmlToAggregate(BlueriqXmlAggregate xmlAggregate)
+        public BlueriqAggregate ParseXmlToAggregate(XmlAggregate xmlAggregate)
         {
             BlueriqAggregate aggregate = new()
             {

@@ -1,8 +1,8 @@
 ﻿using System.Xml.Serialization;
 
-namespace AggregateReader.Parsers.BlueriqXml
+namespace AggregateReader.Parsers.XmlAggregate
 {
-    public class BlueriqXmlAttribute
+    public class XmlAggregateAttribute
     {
         [XmlAttribute(AttributeName = "name")]
         public required string Name { get; set; }

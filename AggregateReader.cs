@@ -1,13 +1,10 @@
 using AggregateReader.BlueriqObjects;
-using AggregateReader.Parsers.BlueriqXml;
 using AggregateReader.Parsers;
-using LogScraper.Extensions;
 using System.Diagnostics;
-using System.Text;
 using System.Xml.Linq;
-using System.Xml.Serialization;
 using TreeView = System.Windows.Forms.TreeView;
 using AggregateReader.Helpers;
+using System.Xml;
 
 namespace AggregateReader
 {
@@ -16,20 +13,22 @@ namespace AggregateReader
         public AggregateReader()
         {
             InitializeComponent();
-            dgvAttributes.DefaultCellStyle.SelectionBackColor = Color.LightGray;
-            dgvAttributes.DefaultCellStyle.SelectionForeColor = Color.Black;
-            dgvRelations.DefaultCellStyle.SelectionBackColor = Color.LightGray;
-            dgvRelations.DefaultCellStyle.SelectionForeColor = Color.Black;
-            dgvParents.DefaultCellStyle.SelectionBackColor = Color.LightGray;
-            dgvParents.DefaultCellStyle.SelectionForeColor = Color.Black;
+            SetDataGridViewDefaultStyle(dgvAttributes);
+            SetDataGridViewDefaultStyle(dgvRelations);
+            SetDataGridViewDefaultStyle(dgvParents);
             dgvAttributes.LostFocus += (sender, e) => dgvAttributes.ClearSelection();
             dgvRelations.LostFocus += (sender, e) => dgvRelations.ClearSelection();
             dgvParents.LostFocus += (sender, e) => dgvParents.ClearSelection();
 
             if (!Debugger.IsAttached) txtXMLInput.Text = string.Empty;
         }
+        private static void SetDataGridViewDefaultStyle(DataGridView dataGridView)
+        {
+            dataGridView.DefaultCellStyle.SelectionBackColor = Color.LightGray;
+            dataGridView.DefaultCellStyle.SelectionForeColor = Color.Black;
+        }
 
-        private void Button1_Click(object sender, EventArgs e)
+        private void BtnRead_Click(object sender, EventArgs e)
         {
             txtXMLInput.Text = FormatXml(txtXMLInput.Text);
             PopulateTreeView(txtXMLInput.Text);
@@ -47,7 +46,6 @@ namespace AggregateReader
         public void ClearTreeview()
         {
             treInstanceOverviewHierarchical.Nodes.Clear();
-            treInstanceOverviewAlphabetically.Nodes.Clear();
         }
         public void ClearInstance()
         {
@@ -73,6 +71,7 @@ namespace AggregateReader
                 return xml;
             }
         }
+
         void PopulateTreeView(string xml)
         {
             ClearTreeview();
@@ -80,25 +79,49 @@ namespace AggregateReader
             try
             {
 
-                if (string.IsNullOrWhiteSpace(txtXMLInput.Text)) return;
+                if (string.IsNullOrWhiteSpace(xml)) return;
 
-                (BlueriqAggregate aggregate, IBlueriqParser parser) = ParserFactory.Parse(txtXMLInput.Text);
+                (BlueriqAggregate aggregate, IBlueriqParser parser) = ParserFactory.Parse(xml);
 
-                TreeViewBuilder.BuildTreeViewHierarchical(treInstanceOverviewHierarchical, aggregate, parser.CanIdentifyRootNodes);
-                TreeViewBuilder.BuildTreeViewAlphabetically(treInstanceOverviewAlphabetically, aggregate);
+                chkShowRootEntitiesOnly.Enabled = parser.CanIdentifyRootNodes;
+                if (!parser.CanIdentifyRootNodes) chkShowRootEntitiesOnly.Checked = false;
+                dgvParents.Columns[2].Visible = parser.CanIdentifyRootNodes;
+
+                TreeViewBuilder.BuildTreeViewHierarchical(treInstanceOverviewHierarchical, aggregate, chkShowRootEntitiesOnly.Checked);
             }
             catch (Exception ex)
             {
-                // Handle and throw if fatal exception here; don't just ignore them
+                if (!IsValidXml(xml))
+                {
+                    MessageBox.Show("The provided XML is not valid, please provide valid XML");
+                }
+                else
+                {
+                    MessageBox.Show(ex.Message);
+                }
             }
         }
-
+        public static bool IsValidXml(string xml)
+        {
+            try
+            {
+                XmlDocument xmlDoc = new();
+                xmlDoc.LoadXml(xml);
+                return true; // XML is valid
+            }
+            catch (XmlException)
+            {
+                return false; // XML is not valid
+            }
+        }
 
         private void TreAggregateEntities_AfterSelect(object sender, TreeViewEventArgs e)
         {
             ClearInstance();
 
             if (e.Node == null || e.Node.Tag == null) return;
+
+            if (e.Node.Tag.GetType() != typeof(BlueriqEntity)) return;
 
             if (e.Node.Tag.GetType() == typeof(BlueriqAggregate)) return;
             if (e.Node.Tag.GetType() == typeof(BlueriqAttribute)) return;
@@ -226,7 +249,7 @@ namespace AggregateReader
             }
         }
 
-        private void SelectTreeViewNode(TreeView treeView, BlueriqRelation? relation)
+        private static void SelectTreeViewNode(TreeView treeView, BlueriqRelation? relation)
         {
             // Iterate through all nodes in the TreeView
             foreach (TreeNode node in treeView.Nodes)
@@ -251,7 +274,6 @@ namespace AggregateReader
                         }
                     }
                     treeView.Focus();
-                    tabInstanceOverview.SelectedIndex = 1;
                     break;
                 }
             }
@@ -259,7 +281,7 @@ namespace AggregateReader
 
         private static TreeNode? FindNode(TreeNode rootNode, BlueriqRelation? relation)
         {
-            if (rootNode.Tag.GetType() == typeof(BlueriqRelation) && rootNode.Tag == relation)
+            if (rootNode.Tag != null && rootNode.Tag.GetType() == typeof(BlueriqRelation) && rootNode.Tag == relation)
             {
                 return rootNode;
             }
@@ -276,14 +298,14 @@ namespace AggregateReader
             return null;
         }
 
-        private void AggregateReader_Load(object sender, EventArgs e)
-        {
-
-        }
-
         private void BtnClear_Click(object sender, EventArgs e)
         {
             Clear();
+        }
+
+        private void ChkShowRootEntitiesOnly_CheckedChanged(object sender, EventArgs e)
+        {
+            BtnRead_Click(sender, e);
         }
     }
 }

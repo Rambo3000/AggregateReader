@@ -1,9 +1,9 @@
 ﻿using System.Xml.Serialization;
 
-namespace AggregateReader.Parsers.BlueriqProfileExportXml
+namespace AggregateReader.Parsers.XmlProfileExport
 {
     [XmlRoot("entity")]
-    public class BlueriqProfileExportXmlEntity
+    public class XmlProfileExportEntity
     {
         [XmlAttribute("instanceid")]
         public string? InstanceId { get; set; }
@@ -12,6 +12,6 @@ namespace AggregateReader.Parsers.BlueriqProfileExportXml
         public string? Name { get; set; }
 
         [XmlElement("attribute")]
-        public List<BlueriqProfileExportXmlAttribute>? Attributes { get; set; }
+        public List<XmlProfileExportAttribute>? Attributes { get; set; }
     }
 }

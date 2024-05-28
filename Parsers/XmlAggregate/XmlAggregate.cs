@@ -1,17 +1,17 @@
 ﻿using System.Xml.Serialization;
 
-namespace AggregateReader.Parsers.BlueriqXml
+namespace AggregateReader.Parsers.XmlAggregate
 {
     [XmlRoot(ElementName = "aggregate")]
-    public class BlueriqXmlAggregate
+    public class XmlAggregate
     {
         [XmlAttribute(AttributeName = "type")]
         public required string Type { get; set; }
 
         [XmlElement(ElementName = "entity")]
-        public List<BlueriqXmlEntity> Entities { get; set; }
+        public List<XmlAggregateEntity> Entities { get; set; }
 
-        public BlueriqXmlAggregate()
+        public XmlAggregate()
         {
             Entities = [];
         }

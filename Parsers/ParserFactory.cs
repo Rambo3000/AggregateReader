@@ -1,14 +1,16 @@
 ﻿using AggregateReader.BlueriqObjects;
+using AggregateReader.Parsers.XmlAggregate;
+using AggregateReader.Parsers.XmlProfileExport;
 
 namespace AggregateReader.Parsers
 {
     public static class ParserFactory
     {
-        private static readonly List<IBlueriqParser> Parsers = new List<IBlueriqParser>
-    {
-        new ParserProfileExportXmlAggregate(),
-        new ParserXmlAggregate()
-    };
+        private static readonly List<IBlueriqParser> Parsers =
+    [
+        new ParserXmlProfileExportToBlueriqAggregate(),
+        new ParserXmlAggregateToBlueriqAggregate()
+    ];
 
         public static (BlueriqAggregate aggregate, IBlueriqParser parser) Parse(string xml)
         {

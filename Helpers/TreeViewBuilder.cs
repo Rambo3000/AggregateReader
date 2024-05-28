@@ -5,41 +5,12 @@ namespace AggregateReader.Helpers
 {
     internal static class TreeViewBuilder
     {
-        public static void BuildTreeViewAlphabetically(TreeView treeView, BlueriqAggregate aggregate)
-        {
-            treeView.SuspendDrawing();
-
-            List<IGrouping<string, BlueriqEntity>> groupedEntities = aggregate.Entities.GroupBy(e => e.Type).ToList();
-
-            TreeNode rootNode = new(aggregate.Type);
-            treeView.Nodes.Add(rootNode);
-
-            foreach (IGrouping<string, BlueriqEntity> group in groupedEntities)
-            {
-                TreeNodeCollection treeNodes = rootNode.Nodes;
-
-                if (group.Count() > 1)
-                {
-                    TreeNode treeNode = new($"{group.Key} ({group.Count()})");
-                    treeNodes.Add(treeNode);
-                    treeNodes = treeNode.Nodes;
-                }
-
-                foreach (BlueriqEntity entity in group)
-                {
-                    treeNodes.Add(CreateEntityNode(entity));
-                }
-            }
-
-            treeView.Nodes[0].Expand();
-            treeView.ResumeDrawing();
-        }
         public static void BuildTreeViewHierarchical(TreeView treeView, BlueriqAggregate aggregate, bool showOnlyRootEntities)
         {
             treeView.SuspendDrawing();
 
             // Create root node for the aggregate
-            TreeNode rootNode = new TreeNode(aggregate.Type)
+            TreeNode rootNode = new(aggregate.Type)
             {
                 Tag = aggregate
             };
@@ -61,7 +32,7 @@ namespace AggregateReader.Helpers
                     var entity = group.First();
                     TreeNode entityNode = CreateEntityNode(entity);
                     rootNode.Nodes.Add(entityNode);
-                    AddPlaceholderNodes(entityNode, entity);
+                    AddPlaceholderNodes(entityNode, entity, treeView);
                 }
                 else
                 {
@@ -76,7 +47,7 @@ namespace AggregateReader.Helpers
                     {
                         TreeNode entityNode = CreateEntityNode(entity);
                         typeNode.Nodes.Add(entityNode);
-                        AddPlaceholderNodes(entityNode, entity);
+                        AddPlaceholderNodes(entityNode, entity, treeView);
                     }
                 }
             }
@@ -94,14 +65,16 @@ namespace AggregateReader.Helpers
             };
         }
 
-        private static void AddPlaceholderNodes(TreeNode entityNode, BlueriqEntity entity)
+        private static void AddPlaceholderNodes(TreeNode entityNode, BlueriqEntity entity, TreeView treeView)
         {
             foreach (var relation in entity.Relations)
             {
-                TreeNode relationNode = new TreeNode(relation.Name)
+                TreeNode relationNode = new(relation.Name)
                 {
-                    Tag = relation
-                };
+                    Tag = relation,
+                    NodeFont = new Font(treeView.Font, FontStyle.Italic)
+                    //ForeColor = Color.DimGray
+            };
 
                 // Add a placeholder node if there are children
                 if (relation.Children != null && relation.Children.Count > 0)
@@ -112,7 +85,7 @@ namespace AggregateReader.Helpers
                 entityNode.Nodes.Add(relationNode);
             }
         }
-        private static void TreeView_BeforeExpand(object sender, TreeViewCancelEventArgs e)
+        private static void TreeView_BeforeExpand(object? sender, TreeViewCancelEventArgs e)
         {
             TreeNode currentNode = e.Node;
 
@@ -131,7 +104,7 @@ namespace AggregateReader.Helpers
                     {
                         TreeNode childEntityNode = CreateEntityNode(childEntity);
                         currentNode.Nodes.Add(childEntityNode);
-                        AddPlaceholderNodes(childEntityNode, childEntity);
+                        AddPlaceholderNodes(childEntityNode, childEntity, currentNode.TreeView);
                     }
                 }
             }
@@ -143,7 +116,7 @@ namespace AggregateReader.Helpers
             {
                 if (relation.Children == null || relation.Children.Count == 0)
                 {
-                    TreeNode newNode = new TreeNode($"{relation.Name} (entiteit niet gevonden!)")
+                    TreeNode newNode = new($"{relation.Name} (entiteit niet gevonden!)")
                     {
                         Tag = relation
                     };
@@ -157,9 +130,10 @@ namespace AggregateReader.Helpers
                     && (!relation.Children[0].OnlyOneInstanceOfThisTypeExists || relation.Name != relation.Children[0].Type)
                     ? $" ({relation.Children[0]})" : "";
 
-                TreeNode relationNode = new TreeNode($"{relation.Name}{entityType}{count}")
+                TreeNode relationNode = new($"{relation.Name}{entityType}{count}")
                 {
-                    Tag = relation
+                    Tag = relation,
+                    ForeColor = Color.Red
                 };
                 entityNode.Nodes.Add(relationNode);
 
@@ -175,7 +149,7 @@ namespace AggregateReader.Helpers
                         {
                             TreeNode childEntityNode = CreateEntityNode(childEntity);
                             relationNode.Nodes.Add(childEntityNode);
-                            AddPlaceholderNodes(childEntityNode, childEntity);
+                            AddPlaceholderNodes(childEntityNode, childEntity, entityNode.TreeView);
                         }
                     }
                 }

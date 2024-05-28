@@ -1,9 +1,9 @@
 ﻿using System.Xml.Serialization;
 
-namespace AggregateReader.Parsers.BlueriqXml
+namespace AggregateReader.Parsers.XmlAggregate
 {
     [XmlRoot(ElementName = "entity")]
-    public class BlueriqXmlEntity
+    public class XmlAggregateEntity
     {
         [XmlAttribute(AttributeName = "type")]
         public string? Type { get; set; }
@@ -15,10 +15,10 @@ namespace AggregateReader.Parsers.BlueriqXml
         public string? Id { get; set; }
 
         [XmlElement(ElementName = "attribute")]
-        public List<BlueriqXmlAttribute>? Attributes { get; set; }
+        public List<XmlAggregateAttribute>? Attributes { get; set; }
 
         [XmlElement(ElementName = "relation")]
-        public List<BlueriqXmlRelation>? Relations { get; set; }
+        public List<XmlAggregateRelation>? Relations { get; set; }
 
         public override string ToString() { return Type ?? string.Empty; }
     }

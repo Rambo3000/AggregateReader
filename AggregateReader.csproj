@@ -16,6 +16,12 @@
     <PackageIcon>tree-view-colored.png</PackageIcon>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove=".gitattributes" />
+    <None Remove=".gitignore" />
+    <None Remove="LICENSE.txt" />
+    <None Remove="README.md" />
+  </ItemGroup>
+  <ItemGroup>
     <None Update="tree-view-colored.png">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
