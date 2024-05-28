@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace AggregateReader.BlueriqXml
+namespace AggregateReader.Parsers.BlueriqXml
 {
     public class BlueriqXmlAttribute
     {

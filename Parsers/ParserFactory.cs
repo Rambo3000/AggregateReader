@@ -2,12 +2,12 @@
 
 namespace AggregateReader.Parsers
 {
-    public static class BlueriqParserFactory
+    public static class ParserFactory
     {
         private static readonly List<IBlueriqParser> Parsers = new List<IBlueriqParser>
     {
-        new BlueriqProfileExportXmlAggregateParser(),
-        new BlueriqXmlAggregateParser()
+        new ParserProfileExportXmlAggregate(),
+        new ParserXmlAggregate()
     };
 
         public static (BlueriqAggregate aggregate, IBlueriqParser parser) Parse(string xml)

@@ -1,4 +1,4 @@
-﻿namespace AggregateReader.BlueriqXml
+﻿namespace AggregateReader.Parsers.BlueriqXml
 {
     public class BlueriqXmlRelation : BlueriqXmlAttribute
     {

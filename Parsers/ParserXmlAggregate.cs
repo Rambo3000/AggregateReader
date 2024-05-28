@@ -1,11 +1,11 @@
 ﻿using AggregateReader.BlueriqObjects;
-using AggregateReader.BlueriqXml;
+using AggregateReader.Parsers.BlueriqXml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 
 namespace AggregateReader.Parsers
 {
-    public class BlueriqXmlAggregateParser : IBlueriqParser
+    public class ParserXmlAggregate : IBlueriqParser
     {
         bool IBlueriqParser.CanIdentifyRootNodes => true;
         public BlueriqAggregate Parse(string xml)

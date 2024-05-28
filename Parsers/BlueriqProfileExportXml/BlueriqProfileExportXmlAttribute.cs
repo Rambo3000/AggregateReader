@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace AggregateReader.BlueriqObjects
+namespace AggregateReader.Parsers.BlueriqProfileExportXml
 {
     [XmlRoot("attribute")]
     public class BlueriqProfileExportXmlAttribute

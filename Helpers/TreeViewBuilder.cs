@@ -1,7 +1,7 @@
 ﻿using AggregateReader.BlueriqObjects;
 using LogScraper.Extensions;
 
-namespace AggregateReader.Parsers
+namespace AggregateReader.Helpers
 {
     internal static class TreeViewBuilder
     {

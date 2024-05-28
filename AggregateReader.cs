@@ -1,5 +1,5 @@
 using AggregateReader.BlueriqObjects;
-using AggregateReader.BlueriqXml;
+using AggregateReader.Parsers.BlueriqXml;
 using AggregateReader.Parsers;
 using LogScraper.Extensions;
 using System.Diagnostics;
@@ -7,6 +7,7 @@ using System.Text;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 using TreeView = System.Windows.Forms.TreeView;
+using AggregateReader.Helpers;
 
 namespace AggregateReader
 {
@@ -81,7 +82,7 @@ namespace AggregateReader
 
                 if (string.IsNullOrWhiteSpace(txtXMLInput.Text)) return;
 
-                (BlueriqAggregate aggregate, IBlueriqParser parser) = BlueriqParserFactory.Parse(txtXMLInput.Text);
+                (BlueriqAggregate aggregate, IBlueriqParser parser) = ParserFactory.Parse(txtXMLInput.Text);
 
                 TreeViewBuilder.BuildTreeViewHierarchical(treInstanceOverviewHierarchical, aggregate, parser.CanIdentifyRootNodes);
                 TreeViewBuilder.BuildTreeViewAlphabetically(treInstanceOverviewAlphabetically, aggregate);

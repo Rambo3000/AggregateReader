@@ -1,7 +1,6 @@
-﻿using System.Xml.Linq;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
-namespace AggregateReader.BlueriqXml
+namespace AggregateReader.Parsers.BlueriqXml
 {
     [XmlRoot(ElementName = "entity")]
     public class BlueriqXmlEntity

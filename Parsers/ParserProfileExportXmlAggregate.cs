@@ -1,11 +1,11 @@
 ﻿using AggregateReader.BlueriqObjects;
-using AggregateReader.BlueriqProfileExportXml;
+using AggregateReader.Parsers.BlueriqProfileExportXml;
 using AggregateReader.Parsers;
 using System.Reflection.Metadata.Ecma335;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 
-public class BlueriqProfileExportXmlAggregateParser : IBlueriqParser
+public class ParserProfileExportXmlAggregate : IBlueriqParser
 {
     bool IBlueriqParser.CanIdentifyRootNodes => false;
 
@@ -55,7 +55,7 @@ public class BlueriqProfileExportXmlAggregateParser : IBlueriqParser
         aggregate.Entities.AddRange(entityMap.Values);
 
         aggregate.Entities.Sort();
-        BlueriqXmlAggregateParser.SetEntityIndices(aggregate);
+        ParserXmlAggregate.SetEntityIndices(aggregate);
 
         return aggregate;
     }
