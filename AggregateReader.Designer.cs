@@ -365,10 +365,10 @@ namespace AggregateReader
             dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
             dataGridViewTextBoxColumn2.ReadOnly = true;
             // 
-            // Id
+            // InstanceId
             // 
-            Id.HeaderText = "Id";
-            Id.Name = "Id";
+            Id.HeaderText = "InstanceId";
+            Id.Name = "InstanceId";
             Id.ReadOnly = true;
             // 
             // Goto2
@@ -469,7 +469,7 @@ namespace AggregateReader
             lblId.Name = "lblId";
             lblId.Size = new Size(17, 15);
             lblId.TabIndex = 7;
-            lblId.Text = "Id";
+            lblId.Text = "InstanceId";
             // 
             // lblEntityValue
             // 

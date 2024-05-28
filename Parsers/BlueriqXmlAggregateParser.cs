@@ -1,15 +1,26 @@
 ﻿using AggregateReader.BlueriqObjects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using AggregateReader.BlueriqXml;
+using System.Xml.Linq;
+using System.Xml.Serialization;
 
-namespace AggregateReader.BlueriqXml
+namespace AggregateReader.Parsers
 {
-    public static class BlueriqXmlAggregateParser
+    public class BlueriqXmlAggregateParser : IBlueriqParser
     {
-        public static BlueriqAggregate ParseXmlToAggregate(BlueriqXmlAggregate xmlAggregate)
+        bool IBlueriqParser.CanIdentifyRootNodes => true;
+        public BlueriqAggregate Parse(string xml)
+        {
+            BlueriqXmlAggregate? xmlAggregate;
+            using TextReader reader = new StringReader(xml);
+            XmlSerializer serializer = new(typeof(BlueriqXmlAggregate));
+            xmlAggregate = serializer.Deserialize(reader) as BlueriqXmlAggregate;
+
+            if (xmlAggregate == null) return null;
+
+            return ParseXmlToAggregate(xmlAggregate);
+        }
+
+        public BlueriqAggregate ParseXmlToAggregate(BlueriqXmlAggregate xmlAggregate)
         {
             BlueriqAggregate aggregate = new()
             {
@@ -91,6 +102,7 @@ namespace AggregateReader.BlueriqXml
 
             SetEntityIndices(aggregate);
 
+            PopulateRelationChildren(aggregate);
             return aggregate;
         }
         public static void SetEntityIndices(BlueriqAggregate aggregate)
@@ -103,7 +115,49 @@ namespace AggregateReader.BlueriqXml
                 foreach (BlueriqEntity entity in group)
                 {
                     entity.Index = index++;
-                    entity.OnlyOneInstanceOfThisTypeExists = (group.Count() == 1);
+                    entity.OnlyOneInstanceOfThisTypeExists = group.Count() == 1;
+                }
+            }
+        }
+
+        public bool CanParse(string xml)
+        {
+            try
+            {
+                XDocument doc = XDocument.Parse(xml);
+                var rootElement = doc.Root;
+                if (rootElement != null)
+                {
+                    var type = rootElement.Attribute("type")?.Value;
+                    return rootElement.Name == "aggregate";
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return false;
+        }
+
+        public static void PopulateRelationChildren(BlueriqAggregate aggregate)
+        {
+            foreach (var entity in aggregate.Entities)
+            {
+                foreach (var relation in entity.Relations)
+                {
+                    // Check if relation has values
+                    if (relation.Values != null && relation.Values.Count != 0)
+                    {
+                        relation.ParentEntity = entity;
+
+                        // Find matching entities based on relation values
+                        relation.Children = aggregate.Entities.Where(e => relation.Values.Contains(e.Id)).ToList();
+                        foreach (var childEntity in relation.Children)
+                        {
+                            childEntity.ParentRelations ??= [];
+                            childEntity.ParentRelations.Add(relation);
+                        }
+                    }
                 }
             }
         }

@@ -6,6 +6,8 @@
         public required string Id { get; set; }
         public List<BlueriqRelation> ParentRelations { get; set; }
 
+        public bool IsRootItem { get { return ParentRelations == null || ParentRelations.Count == 0; } }
+
         public BlueriqEntity()
         {
             ParentRelations = [];
@@ -16,13 +18,13 @@
         public int Index { get; set; }
         public bool OnlyOneInstanceOfThisTypeExists { get; set; }
         public override string ToString() {
-            string indexString = OnlyOneInstanceOfThisTypeExists ? string.Empty : $" #{Index}";
-            return Type + indexString; }
+            //string indexString = OnlyOneInstanceOfThisTypeExists ? string.Empty : $" #{Index}";
+            return $"{Type} #{Index}"; }
 
         public bool Equals(BlueriqEntity? other)
         {
             if (other == null) { return false; }
-            return Type == other.Type;
+            return Type == other.Type && Id == other.Id;
         }
 
         public override bool Equals(object? obj)

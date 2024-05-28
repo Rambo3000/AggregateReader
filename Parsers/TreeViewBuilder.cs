@@ -3,7 +3,7 @@ using LogScraper.Extensions;
 
 namespace AggregateReader.Parsers
 {
-    internal static class TreeViewAggregatePopulator
+    internal static class TreeViewBuilder
     {
         public static void BuildTreeViewAlphabetically(TreeView treeView, BlueriqAggregate aggregate)
         {
@@ -34,7 +34,7 @@ namespace AggregateReader.Parsers
             treeView.Nodes[0].Expand();
             treeView.ResumeDrawing();
         }
-        public static void BuildTreeViewHierarchical(TreeView treeView, BlueriqAggregate aggregate, bool rootItemsOnly)
+        public static void BuildTreeViewHierarchical(TreeView treeView, BlueriqAggregate aggregate, bool showOnlyRootEntities)
         {
             treeView.SuspendDrawing();
 
@@ -48,21 +48,43 @@ namespace AggregateReader.Parsers
             // Attach the BeforeExpand event handler
             treeView.BeforeExpand += TreeView_BeforeExpand;
 
-            // Populate tree with root entities only
-            foreach (var entity in aggregate.Entities)
+            // Group entities by type
+            var groupedEntities = aggregate.Entities.Where(e => e.IsRootItem || showOnlyRootEntities == false).GroupBy(e => e.Type);
+
+            foreach (var group in groupedEntities)
             {
-                if (rootItemsOnly = true && !entity.IsRootItem) continue;
-                
-                entity.OnlyOneInstanceOfThisTypeExists
-                
-                TreeNode entityNode = CreateEntityNode(entity);
-                rootNode.Nodes.Add(entityNode);
-                AddPlaceholderNodes(entityNode, entity);
+                if (group.Key == null) continue;
+
+                if (group.Count() == 1 && group.First().OnlyOneInstanceOfThisTypeExists)
+                {
+                    // Only one instance of this type, add directly
+                    var entity = group.First();
+                    TreeNode entityNode = CreateEntityNode(entity);
+                    rootNode.Nodes.Add(entityNode);
+                    AddPlaceholderNodes(entityNode, entity);
+                }
+                else
+                {
+                    // Multiple instances, create a parent node for the type
+                    TreeNode typeNode = new($"{group.Key} ({group.Count()})")
+                    {
+                        Tag = group.Key
+                    };
+                    rootNode.Nodes.Add(typeNode);
+
+                    foreach (var entity in group)
+                    {
+                        TreeNode entityNode = CreateEntityNode(entity);
+                        typeNode.Nodes.Add(entityNode);
+                        AddPlaceholderNodes(entityNode, entity);
+                    }
+                }
             }
 
             treeView.Nodes[0].Expand();
             treeView.ResumeDrawing();
         }
+
 
         private static TreeNode CreateEntityNode(BlueriqEntity entity)
         {
@@ -99,7 +121,11 @@ namespace AggregateReader.Parsers
             {
                 currentNode.Nodes.Clear(); // Remove the placeholder
 
-                if (currentNode.Tag is BlueriqRelation relation)
+                if (currentNode.Tag is BlueriqEntity entity)
+                {
+                    PopulateEntityNode(currentNode, entity);
+                }
+                else if (currentNode.Tag is BlueriqRelation relation)
                 {
                     foreach (var childEntity in relation.Children)
                     {
@@ -117,7 +143,7 @@ namespace AggregateReader.Parsers
             {
                 if (relation.Children == null || relation.Children.Count == 0)
                 {
-                    TreeNode newNode = new($"{relation.Name} (entiteit niet gevonden!)")
+                    TreeNode newNode = new TreeNode($"{relation.Name} (entiteit niet gevonden!)")
                     {
                         Tag = relation
                     };
@@ -131,14 +157,13 @@ namespace AggregateReader.Parsers
                     && (!relation.Children[0].OnlyOneInstanceOfThisTypeExists || relation.Name != relation.Children[0].Type)
                     ? $" ({relation.Children[0]})" : "";
 
-
-                TreeNode relationNode = new($"{relation.Name}{entityType}{count}")
+                TreeNode relationNode = new TreeNode($"{relation.Name}{entityType}{count}")
                 {
                     Tag = relation
                 };
                 entityNode.Nodes.Add(relationNode);
 
-                if (relation.Children != null && relation.Type == RelationType.NonRecursive)
+                if (relation.Children != null)
                 {
                     if (relation.Children.Count == 1)
                     {
@@ -150,7 +175,7 @@ namespace AggregateReader.Parsers
                         {
                             TreeNode childEntityNode = CreateEntityNode(childEntity);
                             relationNode.Nodes.Add(childEntityNode);
-                            PopulateEntityNode(childEntityNode, childEntity);
+                            AddPlaceholderNodes(childEntityNode, childEntity);
                         }
                     }
                 }

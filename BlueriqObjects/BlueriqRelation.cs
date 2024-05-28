@@ -4,4 +4,5 @@
     {
         public List<BlueriqEntity>? Children { get; set; }
     }
+
 }
