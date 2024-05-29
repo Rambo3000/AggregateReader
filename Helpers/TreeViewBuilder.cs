@@ -74,7 +74,7 @@ namespace AggregateReader.Helpers
                     Tag = relation,
                     NodeFont = new Font(treeView.Font, FontStyle.Italic)
                     //ForeColor = Color.DimGray
-            };
+                };
 
                 // Add a placeholder node if there are children
                 if (relation.Children != null && relation.Children.Count > 0)
@@ -87,6 +87,8 @@ namespace AggregateReader.Helpers
         }
         private static void TreeView_BeforeExpand(object? sender, TreeViewCancelEventArgs e)
         {
+            if (e.Node == null) return;
+
             TreeNode currentNode = e.Node;
 
             // If the node has a placeholder, populate its children
@@ -100,11 +102,14 @@ namespace AggregateReader.Helpers
                 }
                 else if (currentNode.Tag is BlueriqRelation relation)
                 {
-                    foreach (var childEntity in relation.Children)
+                    if (relation.Children != null)
                     {
-                        TreeNode childEntityNode = CreateEntityNode(childEntity);
-                        currentNode.Nodes.Add(childEntityNode);
-                        AddPlaceholderNodes(childEntityNode, childEntity, currentNode.TreeView);
+                        foreach (var childEntity in relation.Children)
+                        {
+                            TreeNode childEntityNode = CreateEntityNode(childEntity);
+                            currentNode.Nodes.Add(childEntityNode);
+                            AddPlaceholderNodes(childEntityNode, childEntity, currentNode.TreeView);
+                        }
                     }
                 }
             }

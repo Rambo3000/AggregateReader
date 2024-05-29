@@ -18,8 +18,8 @@
         public int Index { get; set; }
         public bool OnlyOneInstanceOfThisTypeExists { get; set; }
         public override string ToString() {
-            //string indexString = OnlyOneInstanceOfThisTypeExists ? string.Empty : $" #{Index}";
-            return $"{Type} #{Index}"; }
+            string indexString = OnlyOneInstanceOfThisTypeExists ? string.Empty : $" #{Index}";
+            return $"{Type}{indexString}"; }
 
         public bool Equals(BlueriqEntity? other)
         {

@@ -14,7 +14,7 @@ namespace AggregateReader.Parsers.XmlAggregate
             XmlSerializer serializer = new(typeof(XmlAggregate));
             xmlAggregate = serializer.Deserialize(reader) as XmlAggregate;
 
-            if (xmlAggregate == null) return null;
+            if (xmlAggregate == null) return new BlueriqAggregate() { Type = string.Empty, Entities = [] };
 
             return ParseXmlToAggregate(xmlAggregate);
         }
@@ -45,7 +45,8 @@ namespace AggregateReader.Parsers.XmlAggregate
                         {
                             Name = xmlAttribute.Name,
                             Multivalue = xmlAttribute.Multivalue,
-                            ParentEntity = entity
+                            ParentEntity = entity,
+                            DerivationType = DerivationType.UserSet
                         };
 
                         // Check if attribute has multiple values
@@ -97,9 +98,10 @@ namespace AggregateReader.Parsers.XmlAggregate
                 aggregate.Entities ??= [];
                 aggregate.Entities.Add(entity);
             }
-            aggregate.Entities.Sort();
-
+            
             SetEntityIndices(aggregate);
+
+            aggregate.Entities.Sort();
 
             PopulateRelationChildren(aggregate);
             return aggregate;

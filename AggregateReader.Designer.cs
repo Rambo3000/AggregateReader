@@ -49,11 +49,16 @@ namespace AggregateReader
             grpAggregateContent = new GroupBox();
             chkShowRootEntitiesOnly = new CheckBox();
             groupBox1 = new GroupBox();
+            txtInstanceIdValue = new TextBox();
+            txtEntityTypeValue = new TextBox();
+            txtRelationValue = new TextBox();
             lblRelation = new Label();
             scAttributesAndOthers = new SplitContainer();
+            chkOnlyShowAttributesHavingAValue = new CheckBox();
             dgvAttributes = new DataGridView();
             Attribute = new DataGridViewTextBoxColumn();
             Value = new DataGridViewTextBoxColumn();
+            Derivation = new DataGridViewTextBoxColumn();
             scRelationsAndParents = new SplitContainer();
             dgvRelations = new DataGridView();
             dataGridViewTextBoxColumn1 = new DataGridViewTextBoxColumn();
@@ -65,10 +70,7 @@ namespace AggregateReader
             dataGridViewTextBoxColumn5 = new DataGridViewTextBoxColumn();
             Goto = new DataGridViewButtonColumn();
             lblEntity = new Label();
-            lblRelationValue = new Label();
-            lblIdValue = new Label();
             lblId = new Label();
-            lblEntityValue = new Label();
             scMain = new SplitContainer();
             grpXML = new GroupBox();
             btnClear = new Button();
@@ -170,13 +172,13 @@ namespace AggregateReader
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(txtInstanceIdValue);
+            groupBox1.Controls.Add(txtEntityTypeValue);
+            groupBox1.Controls.Add(txtRelationValue);
             groupBox1.Controls.Add(lblRelation);
             groupBox1.Controls.Add(scAttributesAndOthers);
             groupBox1.Controls.Add(lblEntity);
-            groupBox1.Controls.Add(lblRelationValue);
-            groupBox1.Controls.Add(lblIdValue);
             groupBox1.Controls.Add(lblId);
-            groupBox1.Controls.Add(lblEntityValue);
             groupBox1.Dock = DockStyle.Fill;
             groupBox1.Location = new Point(0, 0);
             groupBox1.Name = "groupBox1";
@@ -184,6 +186,36 @@ namespace AggregateReader
             groupBox1.TabIndex = 12;
             groupBox1.TabStop = false;
             groupBox1.Text = "Instance";
+            // 
+            // txtInstanceIdValue
+            // 
+            txtInstanceIdValue.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            txtInstanceIdValue.BorderStyle = BorderStyle.None;
+            txtInstanceIdValue.Location = new Point(81, 49);
+            txtInstanceIdValue.Name = "txtInstanceIdValue";
+            txtInstanceIdValue.ReadOnly = true;
+            txtInstanceIdValue.Size = new Size(298, 16);
+            txtInstanceIdValue.TabIndex = 14;
+            // 
+            // txtEntityTypeValue
+            // 
+            txtEntityTypeValue.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            txtEntityTypeValue.BorderStyle = BorderStyle.None;
+            txtEntityTypeValue.Location = new Point(81, 33);
+            txtEntityTypeValue.Name = "txtEntityTypeValue";
+            txtEntityTypeValue.ReadOnly = true;
+            txtEntityTypeValue.Size = new Size(298, 16);
+            txtEntityTypeValue.TabIndex = 13;
+            // 
+            // txtRelationValue
+            // 
+            txtRelationValue.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            txtRelationValue.BorderStyle = BorderStyle.None;
+            txtRelationValue.Location = new Point(81, 18);
+            txtRelationValue.Name = "txtRelationValue";
+            txtRelationValue.ReadOnly = true;
+            txtRelationValue.Size = new Size(298, 16);
+            txtRelationValue.TabIndex = 12;
             // 
             // lblRelation
             // 
@@ -203,6 +235,7 @@ namespace AggregateReader
             // 
             // scAttributesAndOthers.Panel1
             // 
+            scAttributesAndOthers.Panel1.Controls.Add(chkOnlyShowAttributesHavingAValue);
             scAttributesAndOthers.Panel1.Controls.Add(dgvAttributes);
             // 
             // scAttributesAndOthers.Panel2
@@ -212,6 +245,18 @@ namespace AggregateReader
             scAttributesAndOthers.SplitterDistance = 225;
             scAttributesAndOthers.TabIndex = 11;
             // 
+            // chkOnlyShowAttributesHavingAValue
+            // 
+            chkOnlyShowAttributesHavingAValue.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            chkOnlyShowAttributesHavingAValue.AutoSize = true;
+            chkOnlyShowAttributesHavingAValue.Location = new Point(3, 204);
+            chkOnlyShowAttributesHavingAValue.Name = "chkOnlyShowAttributesHavingAValue";
+            chkOnlyShowAttributesHavingAValue.Size = new Size(214, 19);
+            chkOnlyShowAttributesHavingAValue.TabIndex = 12;
+            chkOnlyShowAttributesHavingAValue.Text = "Only show attributes having a value";
+            chkOnlyShowAttributesHavingAValue.UseVisualStyleBackColor = true;
+            chkOnlyShowAttributesHavingAValue.CheckedChanged += ChkOnlyShowAttributesHavingAValue_CheckedChanged;
+            // 
             // dgvAttributes
             // 
             dgvAttributes.AllowUserToAddRows = false;
@@ -220,6 +265,7 @@ namespace AggregateReader
             dgvAttributes.AllowUserToResizeRows = false;
             dataGridViewCellStyle1.BackColor = Color.FromArgb(250, 250, 250);
             dgvAttributes.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            dgvAttributes.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dgvAttributes.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvAttributes.BackgroundColor = SystemColors.Window;
             dgvAttributes.BorderStyle = BorderStyle.None;
@@ -234,8 +280,7 @@ namespace AggregateReader
             dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
             dgvAttributes.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             dgvAttributes.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvAttributes.Columns.AddRange(new DataGridViewColumn[] { Attribute, Value });
-            dgvAttributes.Dock = DockStyle.Fill;
+            dgvAttributes.Columns.AddRange(new DataGridViewColumn[] { Attribute, Value, Derivation });
             dgvAttributes.GridColor = SystemColors.Window;
             dgvAttributes.Location = new Point(0, 0);
             dgvAttributes.Name = "dgvAttributes";
@@ -244,11 +289,12 @@ namespace AggregateReader
             dataGridViewCellStyle4.WrapMode = DataGridViewTriState.False;
             dgvAttributes.RowsDefaultCellStyle = dataGridViewCellStyle4;
             dgvAttributes.RowTemplate.Height = 20;
-            dgvAttributes.Size = new Size(367, 225);
+            dgvAttributes.Size = new Size(367, 198);
             dgvAttributes.TabIndex = 11;
             // 
             // Attribute
             // 
+            Attribute.FillWeight = 111.928932F;
             Attribute.HeaderText = "Attribute";
             Attribute.Name = "Attribute";
             Attribute.ReadOnly = true;
@@ -257,9 +303,19 @@ namespace AggregateReader
             // 
             dataGridViewCellStyle3.WrapMode = DataGridViewTriState.False;
             Value.DefaultCellStyle = dataGridViewCellStyle3;
+            Value.FillWeight = 111.928932F;
             Value.HeaderText = "Value";
             Value.Name = "Value";
             Value.ReadOnly = true;
+            // 
+            // Derivation
+            // 
+            Derivation.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            Derivation.FillWeight = 76.1421356F;
+            Derivation.HeaderText = "Derivation";
+            Derivation.Name = "Derivation";
+            Derivation.ReadOnly = true;
+            Derivation.Width = 70;
             // 
             // scRelationsAndParents
             // 
@@ -410,22 +466,6 @@ namespace AggregateReader
             lblEntity.TabIndex = 5;
             lblEntity.Text = "Entity type";
             // 
-            // lblRelationValue
-            // 
-            lblRelationValue.AutoSize = true;
-            lblRelationValue.Location = new Point(87, 19);
-            lblRelationValue.Name = "lblRelationValue";
-            lblRelationValue.Size = new Size(0, 15);
-            lblRelationValue.TabIndex = 10;
-            // 
-            // lblIdValue
-            // 
-            lblIdValue.AutoSize = true;
-            lblIdValue.Location = new Point(87, 49);
-            lblIdValue.Name = "lblIdValue";
-            lblIdValue.Size = new Size(0, 15);
-            lblIdValue.TabIndex = 6;
-            // 
             // lblId
             // 
             lblId.AutoSize = true;
@@ -434,14 +474,6 @@ namespace AggregateReader
             lblId.Size = new Size(61, 15);
             lblId.TabIndex = 7;
             lblId.Text = "InstanceId";
-            // 
-            // lblEntityValue
-            // 
-            lblEntityValue.AutoSize = true;
-            lblEntityValue.Location = new Point(87, 34);
-            lblEntityValue.Name = "lblEntityValue";
-            lblEntityValue.Size = new Size(0, 15);
-            lblEntityValue.TabIndex = 8;
             // 
             // scMain
             // 
@@ -501,6 +533,7 @@ namespace AggregateReader
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
             scAttributesAndOthers.Panel1.ResumeLayout(false);
+            scAttributesAndOthers.Panel1.PerformLayout();
             scAttributesAndOthers.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)scAttributesAndOthers).EndInit();
             scAttributesAndOthers.ResumeLayout(false);
@@ -525,11 +558,8 @@ namespace AggregateReader
         private Button button1;
         private TreeView treInstanceOverviewHierarchical;
         private SplitContainer scTreeviewAndOthers;
-        private Label lblEntityValue;
         private Label lblId;
-        private Label lblIdValue;
         private Label lblEntity;
-        private Label lblRelationValue;
         private Label lblRelation;
         private DataGridView dgvAttributes;
         private SplitContainer scAttributesAndOthers;
@@ -545,11 +575,16 @@ namespace AggregateReader
         private Button btnClear;
         private GroupBox grpAggregateContent;
         private GroupBox groupBox1;
-        private DataGridViewTextBoxColumn Attribute;
-        private DataGridViewTextBoxColumn Value;
         private CheckBox chkShowRootEntitiesOnly;
         private DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
         private DataGridViewTextBoxColumn dataGridViewTextBoxColumn5;
         private DataGridViewButtonColumn Goto;
+        private TextBox txtRelationValue;
+        private TextBox txtInstanceIdValue;
+        private TextBox txtEntityTypeValue;
+        private DataGridViewTextBoxColumn Attribute;
+        private DataGridViewTextBoxColumn Value;
+        private DataGridViewTextBoxColumn Derivation;
+        private CheckBox chkOnlyShowAttributesHavingAValue;
     }
 }

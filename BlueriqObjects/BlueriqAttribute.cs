@@ -6,6 +6,7 @@
         public required string Multivalue { get; set; }
         public List<string>? Values { get; set; }
         public required BlueriqEntity ParentEntity { get; set; }
+        public DerivationType? DerivationType { get; set; }
 
         public bool Equals(BlueriqAttribute? other)
         {

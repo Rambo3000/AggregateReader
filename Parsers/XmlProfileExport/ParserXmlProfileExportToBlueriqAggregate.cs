@@ -1,5 +1,6 @@
 ﻿using AggregateReader.BlueriqObjects;
 using AggregateReader.Parsers.XmlAggregate;
+using System;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 
@@ -13,39 +14,47 @@ namespace AggregateReader.Parsers.XmlProfileExport
         {
             // Deserialize the XML to Profile object
             XmlSerializer serializer = new(typeof(XmlProfileExportProfile));
-            XmlProfileExportProfile profile;
+            XmlProfileExportProfile? profile;
             using (StringReader reader = new(xml))
             {
-                profile = (XmlProfileExportProfile)serializer.Deserialize(reader);
+                profile = (XmlProfileExportProfile?)serializer.Deserialize(reader);
             }
+
+            if (profile == null) return new BlueriqAggregate() { Type = string.Empty, Entities = [] };
 
             // Create BlueriqAggregate
             BlueriqAggregate aggregate = new()
             {
-                Type = profile.AppName,
+                Type = profile.AppName ?? string.Empty,
                 Entities = []
             };
 
+            if (profile.Entities == null) return aggregate;
+
             // Map Profile Entities to BlueriqEntities
-            var entityMap = profile.Entities.ToDictionary(
-                e => e.InstanceId,
+            Dictionary<string, BlueriqEntity> entityMap = profile.Entities.ToDictionary(
+                e => e.InstanceId ?? string.Empty,
                 e => new BlueriqEntity
                 {
-                    Type = e.Name,
-                    Id = e.InstanceId,
+                    Type = e.Name ?? string.Empty,
+                    Id = e.InstanceId ?? string.Empty,
                     Attributes = [],
                     Relations = [],
                     ParentRelations = []
                 });
 
             // Populate Attributes and Relations
-            foreach (var entity in profile.Entities)
+            foreach (XmlProfileExportEntity entity in profile.Entities)
             {
-                var blueriqEntity = entityMap[entity.InstanceId];
-                foreach (var attribute in entity.Attributes)
+                BlueriqEntity blueriqEntity = entityMap[entity.InstanceId ?? string.Empty];
+
+                if (entity.Attributes == null) continue;
+
+                foreach (XmlProfileExportAttribute attribute in entity.Attributes)
                 {
                     AddAttributeOrRelation(blueriqEntity, attribute, entityMap);
                 }
+
                 blueriqEntity.Attributes.Sort();
                 blueriqEntity.Relations.Sort();
             }
@@ -54,8 +63,9 @@ namespace AggregateReader.Parsers.XmlProfileExport
             // Add Entities to Aggregate
             aggregate.Entities.AddRange(entityMap.Values);
 
-            aggregate.Entities.Sort();
             ParserXmlAggregateToBlueriqAggregate.SetEntityIndices(aggregate);
+
+            aggregate.Entities.Sort();
 
             return aggregate;
         }
@@ -63,7 +73,7 @@ namespace AggregateReader.Parsers.XmlProfileExport
         private static void AddAttributeOrRelation(
             BlueriqEntity entity, XmlProfileExportAttribute xmlAttribute, Dictionary<string, BlueriqEntity> entityMap)
         {
-            string cleanName = xmlAttribute.Name.Split('.').Last();
+            string cleanName = xmlAttribute.Name == null ? string.Empty : xmlAttribute.Name.Split('.').Last();
 
             string firstValue = "";
             if (xmlAttribute.Values != null && xmlAttribute.Values.Count > 0) firstValue = xmlAttribute.Values[0];
@@ -77,15 +87,28 @@ namespace AggregateReader.Parsers.XmlProfileExport
                     Name = cleanName,
                     Multivalue = "false",
                     ParentEntity = entity,
+                    Values = [],
+                    Children = []
 
                 };
                 entity.Relations.Add(relation);
 
-                var parts = firstValue.Split('|');
-                if (parts.Length > 1 && entityMap.TryGetValue(parts[1], out var relatedEntity))
+                if (xmlAttribute.Values != null) relation.Values = xmlAttribute.Values;
+                if (xmlAttribute.Value != null) relation.Values.Add(xmlAttribute.Value);
+
+                foreach (string value in relation.Values)
                 {
-                    relation.Children = [relatedEntity];
-                    relatedEntity.ParentRelations.Add(relation);
+                    string[] parts = value.Split('|');
+                    if (parts.Length != 3) continue;
+
+                    foreach (BlueriqEntity loopEntity in entityMap.Values)
+                    {
+                        if (loopEntity.Type == parts[0] && loopEntity.Id == parts[1])
+                        {
+                            relation.Children.Add(loopEntity);
+                            loopEntity.ParentRelations.Add(relation);
+                        }
+                    }
                 }
             }
             else
@@ -98,6 +121,11 @@ namespace AggregateReader.Parsers.XmlProfileExport
                     ParentEntity = entity,
                     Values = []
                 };
+
+                if (xmlAttribute.Source == "USER") attribute.DerivationType = DerivationType.UserSet;
+                if (xmlAttribute.Source == "UNKNOWN") attribute.DerivationType = DerivationType.DerivedUnknown;
+                if (xmlAttribute.Source == "DEFAULT") attribute.DerivationType = DerivationType.DerivedDefaultValue;
+                if (xmlAttribute.Source == "SYSTEM") attribute.DerivationType = DerivationType.DerivedSystem;
 
                 if (xmlAttribute.Values != null) attribute.Values = xmlAttribute.Values;
                 if (xmlAttribute.Value != null) attribute.Values.Add(xmlAttribute.Value);

@@ -50,9 +50,9 @@ namespace AggregateReader
         public void ClearInstance()
         {
 
-            lblEntityValue.Text = "";
-            lblIdValue.Text = "";
-            lblRelationValue.Text = "";
+            txtEntityTypeValue.Text = "";
+            txtInstanceIdValue.Text = "";
+            txtRelationValue.Text = "";
             dgvAttributes.Rows.Clear();
             dgvRelations.Rows.Clear();
             dgvParents.Rows.Clear();
@@ -121,35 +121,34 @@ namespace AggregateReader
 
             if (e.Node == null || e.Node.Tag == null) return;
 
-            if (e.Node.Tag.GetType() != typeof(BlueriqEntity)) return;
-
-            if (e.Node.Tag.GetType() == typeof(BlueriqAggregate)) return;
-            if (e.Node.Tag.GetType() == typeof(BlueriqAttribute)) return;
-
-            BlueriqRelation? relation = null;
-            BlueriqEntity? entity = null;
             TreeNode nodeInitial = e.Node;
-            if (e.Node.Tag.GetType() == typeof(BlueriqRelation))
-            {
-                relation = (BlueriqRelation)e.Node.Tag;
-                if (relation.Children == null || relation.Children.Count != 1) return;
 
-                entity = relation.Children.First();
-            }
-            if (e.Node.Tag.GetType() == typeof(BlueriqEntity))
-            {
-                entity = (BlueriqEntity)e.Node.Tag;
-            }
+            if (nodeInitial.Tag.GetType() != typeof(BlueriqEntity)) return;
+
+            BlueriqEntity? entity = (BlueriqEntity)nodeInitial.Tag; ;
 
             if (entity == null) return;
 
-            if (relation == null && e.Node.Parent.Tag != null && e.Node.Parent.Tag.GetType() == typeof(BlueriqRelation))
+
+            txtRelationValue.Text = GetRelationPath(nodeInitial);
+            txtEntityTypeValue.Text = entity.Type;
+            txtInstanceIdValue.Text = entity.Id;
+
+            PopulateDataGridViewAttributes(dgvAttributes, entity.Attributes);
+            PopulateDataGridViewRelations(dgvRelations, entity);
+            PopulateDataGridViewParents(dgvParents, entity);
+        }
+
+        private static string GetRelationPath(TreeNode nodeInitial)
+        {
+
+            if (nodeInitial.Parent.Tag != null && nodeInitial.Parent.Tag.GetType() == typeof(BlueriqRelation))
             {
-                nodeInitial = e.Node.Parent;
+                nodeInitial = nodeInitial.Parent;
             }
 
-            string? relationPath = null;
-            TreeNode nodeLoop = nodeInitial;
+            string relationPath = string.Empty;
+            TreeNode? nodeLoop = nodeInitial;
             while (nodeLoop != null)
             {
                 if (nodeLoop.Tag != null)
@@ -161,7 +160,16 @@ namespace AggregateReader
                     if (nodeLoop.Tag.GetType() == typeof(BlueriqEntity))
                     {
                         BlueriqEntity entityLoop = (BlueriqEntity)nodeLoop.Tag;
-                        if (entityLoop.ParentRelations == null || entityLoop.ParentRelations.Count == 0)
+                        if (nodeLoop.Parent != null && nodeLoop.Parent.Tag != null && nodeLoop.Parent.Tag.GetType() == typeof(BlueriqAggregate))
+                        {
+                            relationPath = entityLoop.Type + "." + relationPath;
+                        }
+                    }
+                    // In case the root items are grouped we can identify that by the string and get the entity by getting the first child
+                    if (nodeLoop.Tag.GetType() == typeof(string) && nodeLoop.Nodes.Count > 0 && nodeLoop.Nodes[0].Tag.GetType() == typeof(BlueriqEntity))
+                    {
+                        BlueriqEntity entityLoop = (BlueriqEntity)nodeLoop.Nodes[0].Tag;
+                        if (nodeLoop.Parent != null && nodeLoop.Parent.Tag != null && nodeLoop.Parent.Tag.GetType() == typeof(BlueriqAggregate))
                         {
                             relationPath = entityLoop.Type + "." + relationPath;
                         }
@@ -170,28 +178,36 @@ namespace AggregateReader
                 nodeLoop = nodeLoop.Parent;
             }
 
-            if (relationPath != null)
+            if (!string.IsNullOrWhiteSpace(relationPath))
             {
-                lblRelationValue.Text = relationPath[..^1];
+                relationPath = relationPath[..^1];
             }
 
-            lblEntityValue.Text = entity.Type;
-            lblIdValue.Text = entity.Id;
-
-            PopulateDataGridViewAttributes(dgvAttributes, entity.Attributes);
-            PopulateDataGridViewRelations(dgvRelations, entity);
-            PopulateDataGridViewParents(dgvParents, entity);
+            return relationPath;
         }
-        public static void PopulateDataGridViewAttributes(DataGridView dataGridView, List<BlueriqAttribute> attributes)
+
+        public void PopulateDataGridViewAttributes(DataGridView dataGridView, List<BlueriqAttribute> attributes)
         {
             // Populate data
             foreach (var attribute in attributes)
             {
+                if (attribute.Values == null || attribute.Values.Count == 0 && chkOnlyShowAttributesHavingAValue.Checked) continue;
+
                 // If attribute has multiple values, join them with new lines
                 string valuesString = attribute.Values != null ? string.Join(Environment.NewLine, attribute.Values) : string.Empty;
-                dataGridView.Rows.Add(attribute.Name, valuesString);
+                string derivationDescription = attribute.DerivationType switch
+                {
+                    DerivationType.UserSet => "User set",
+                    DerivationType.DerivedUnknown => "Unknown",
+                    DerivationType.DerivedSystem => "System",
+                    DerivationType.DerivedDefaultValue => "Default",
+                    null => string.Empty,
+                    _ => string.Empty,
+                };
+                dataGridView.Rows.Add(attribute.Name, valuesString, derivationDescription);
             }
             dataGridView.ClearSelection();
+            dataGridView.Tag = attributes;
         }
         public static void PopulateDataGridViewRelations(DataGridView dataGridView, BlueriqEntity entity)
         {
@@ -306,6 +322,14 @@ namespace AggregateReader
         private void ChkShowRootEntitiesOnly_CheckedChanged(object sender, EventArgs e)
         {
             BtnRead_Click(sender, e);
+        }
+
+        private void ChkOnlyShowAttributesHavingAValue_CheckedChanged(object sender, EventArgs e)
+        {
+            if (dgvAttributes.Tag == null) return;
+
+            dgvAttributes.Rows.Clear();
+            PopulateDataGridViewAttributes(dgvAttributes, (List<BlueriqAttribute>)dgvAttributes.Tag);
         }
     }
 }
