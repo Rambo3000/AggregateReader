@@ -96,11 +96,13 @@ namespace AggregateReader.Parsers.XmlProfileExport
                 if (xmlAttribute.Values != null) relation.Values = xmlAttribute.Values;
                 if (xmlAttribute.Value != null) relation.Values.Add(xmlAttribute.Value);
 
+                List<string> parsedValues = [];
                 foreach (string value in relation.Values)
                 {
                     string[] parts = value.Split('|');
                     if (parts.Length != 3) continue;
 
+                    parsedValues.Add(parts[1]);
                     foreach (BlueriqEntity loopEntity in entityMap.Values)
                     {
                         if (loopEntity.Type == parts[0] && loopEntity.Id == parts[1])
@@ -110,6 +112,7 @@ namespace AggregateReader.Parsers.XmlProfileExport
                         }
                     }
                 }
+                relation.Values = parsedValues;
             }
             else
             {
