@@ -14,6 +14,15 @@ namespace AggregateReader
             InitializeComponent();
             usrEntityViewer.NavigateToRelationEvent += UsrEntityViewer_NavigateToRelationEvent;
 
+            string version = Application.ProductVersion;
+            const string versionSeperator = "+";
+            if (version.Contains(versionSeperator))
+            {
+                version = version[..version.IndexOf(versionSeperator)];
+            }
+
+            lblVersion.Text = "v" + version;
+
             if (!Debugger.IsAttached) txtXMLInput.Text = string.Empty;
         }
 

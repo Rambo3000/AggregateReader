@@ -38,10 +38,11 @@ namespace AggregateReader
             grpAggregateContent = new GroupBox();
             chkShowRootEntitiesOnly = new CheckBox();
             groupBox1 = new GroupBox();
+            lblVersion = new Label();
+            usrEntityViewer = new UsrEntityViewer();
             scMain = new SplitContainer();
             grpXML = new GroupBox();
             btnClear = new Button();
-            usrEntityViewer = new UsrEntityViewer();
             ((System.ComponentModel.ISupportInitialize)scTreeviewAndOthers).BeginInit();
             scTreeviewAndOthers.Panel1.SuspendLayout();
             scTreeviewAndOthers.Panel2.SuspendLayout();
@@ -82,7 +83,7 @@ namespace AggregateReader
             treInstanceOverviewHierarchical.BorderStyle = BorderStyle.None;
             treInstanceOverviewHierarchical.Location = new Point(3, 18);
             treInstanceOverviewHierarchical.Name = "treInstanceOverviewHierarchical";
-            treInstanceOverviewHierarchical.Size = new Size(391, 478);
+            treInstanceOverviewHierarchical.Size = new Size(389, 478);
             treInstanceOverviewHierarchical.TabIndex = 3;
             treInstanceOverviewHierarchical.AfterSelect += TreAggregateEntities_AfterSelect;
             // 
@@ -99,8 +100,8 @@ namespace AggregateReader
             // scTreeviewAndOthers.Panel2
             // 
             scTreeviewAndOthers.Panel2.Controls.Add(groupBox1);
-            scTreeviewAndOthers.Size = new Size(783, 527);
-            scTreeviewAndOthers.SplitterDistance = 400;
+            scTreeviewAndOthers.Size = new Size(780, 527);
+            scTreeviewAndOthers.SplitterDistance = 398;
             scTreeviewAndOthers.TabIndex = 5;
             // 
             // grpAggregateContent
@@ -110,7 +111,7 @@ namespace AggregateReader
             grpAggregateContent.Dock = DockStyle.Fill;
             grpAggregateContent.Location = new Point(0, 0);
             grpAggregateContent.Name = "grpAggregateContent";
-            grpAggregateContent.Size = new Size(400, 527);
+            grpAggregateContent.Size = new Size(398, 527);
             grpAggregateContent.TabIndex = 4;
             grpAggregateContent.TabStop = false;
             grpAggregateContent.Text = "Instance overview";
@@ -121,22 +122,44 @@ namespace AggregateReader
             chkShowRootEntitiesOnly.AutoSize = true;
             chkShowRootEntitiesOnly.Location = new Point(6, 502);
             chkShowRootEntitiesOnly.Name = "chkShowRootEntitiesOnly";
-            chkShowRootEntitiesOnly.Size = new Size(208, 19);
+            chkShowRootEntitiesOnly.Size = new Size(209, 19);
             chkShowRootEntitiesOnly.TabIndex = 4;
-            chkShowRootEntitiesOnly.Text = "Show root entities only at top level";
+            chkShowRootEntitiesOnly.Text = "Only show root entities at top level";
             chkShowRootEntitiesOnly.UseVisualStyleBackColor = true;
             chkShowRootEntitiesOnly.CheckedChanged += ChkShowRootEntitiesOnly_CheckedChanged;
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(lblVersion);
             groupBox1.Controls.Add(usrEntityViewer);
             groupBox1.Dock = DockStyle.Fill;
             groupBox1.Location = new Point(0, 0);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(379, 527);
+            groupBox1.Size = new Size(378, 527);
             groupBox1.TabIndex = 12;
             groupBox1.TabStop = false;
             groupBox1.Text = "Instance";
+            // 
+            // lblVersion
+            // 
+            lblVersion.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            lblVersion.BackColor = SystemColors.Control;
+            lblVersion.ForeColor = Color.Silver;
+            lblVersion.Location = new Point(330, 0);
+            lblVersion.Name = "lblVersion";
+            lblVersion.Size = new Size(45, 19);
+            lblVersion.TabIndex = 5;
+            lblVersion.Text = "v0.0.0";
+            lblVersion.TextAlign = ContentAlignment.MiddleRight;
+            // 
+            // usrEntityViewer
+            // 
+            usrEntityViewer.CanNavigateToParentRelations = true;
+            usrEntityViewer.Dock = DockStyle.Fill;
+            usrEntityViewer.Location = new Point(3, 19);
+            usrEntityViewer.Name = "usrEntityViewer";
+            usrEntityViewer.Size = new Size(372, 505);
+            usrEntityViewer.TabIndex = 0;
             // 
             // scMain
             // 
@@ -178,14 +201,6 @@ namespace AggregateReader
             btnClear.UseVisualStyleBackColor = true;
             btnClear.Click += BtnClear_Click;
             // 
-            // usrEntityViewer
-            // 
-            usrEntityViewer.Dock = DockStyle.Fill;
-            usrEntityViewer.Location = new Point(3, 19);
-            usrEntityViewer.Name = "usrEntityViewer";
-            usrEntityViewer.Size = new Size(373, 505);
-            usrEntityViewer.TabIndex = 0;
-            // 
             // AggregateReader
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -223,5 +238,6 @@ namespace AggregateReader
         private GroupBox groupBox1;
         private CheckBox chkShowRootEntitiesOnly;
         private UsrEntityViewer usrEntityViewer;
+        private Label lblVersion;
     }
 }

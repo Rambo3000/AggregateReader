@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-windows</TargetFramework>
@@ -29,16 +29,13 @@
     <None Remove="PULL_REQUEST_TEMPLATE.md" />
     <None Remove="README.md" />
     <None Remove="SECURITY.md" />
+    <None Remove="tree-view-512.psd" />
+    <None Remove="tree-view-colored.ico" />
+    <None Remove="tree-view-colored.png" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="UsrEntityViewer.cs">
       <SubType>Form</SubType>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Update="tree-view-colored.png">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
   </ItemGroup>
 </Project>
