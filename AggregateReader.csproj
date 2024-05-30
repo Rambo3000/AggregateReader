@@ -28,6 +28,12 @@
     <None Remove="LICENSE.txt" />
     <None Remove="PULL_REQUEST_TEMPLATE.md" />
     <None Remove="README.md" />
+    <None Remove="SECURITY.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="UsrEntityViewer.cs">
+      <SubType>Form</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Update="tree-view-colored.png">

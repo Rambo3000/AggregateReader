@@ -1,10 +1,9 @@
 using AggregateReader.BlueriqObjects;
 using AggregateReader.Parsers;
 using System.Diagnostics;
-using System.Xml.Linq;
 using TreeView = System.Windows.Forms.TreeView;
 using AggregateReader.Helpers;
-using System.Xml;
+using System.Windows.Forms;
 
 namespace AggregateReader
 {
@@ -13,19 +12,14 @@ namespace AggregateReader
         public AggregateReader()
         {
             InitializeComponent();
-            SetDataGridViewDefaultStyle(dgvAttributes);
-            SetDataGridViewDefaultStyle(dgvRelations);
-            SetDataGridViewDefaultStyle(dgvParents);
-            dgvAttributes.LostFocus += (sender, e) => dgvAttributes.ClearSelection();
-            dgvRelations.LostFocus += (sender, e) => dgvRelations.ClearSelection();
-            dgvParents.LostFocus += (sender, e) => dgvParents.ClearSelection();
+            usrEntityViewer.NavigateToRelationEvent += UsrEntityViewer_NavigateToRelationEvent;
 
             if (!Debugger.IsAttached) txtXMLInput.Text = string.Empty;
         }
-        private static void SetDataGridViewDefaultStyle(DataGridView dataGridView)
+
+        private void UsrEntityViewer_NavigateToRelationEvent(object sender, BlueriqRelation relation, BlueriqEntity? entity)
         {
-            dataGridView.DefaultCellStyle.SelectionBackColor = Color.LightGray;
-            dataGridView.DefaultCellStyle.SelectionForeColor = Color.Black;
+            SelectTreeViewNode(treInstanceOverviewHierarchical, relation, entity);
         }
 
         private void BtnRead_Click(object sender, EventArgs e)
@@ -49,15 +43,8 @@ namespace AggregateReader
         }
         public void ClearInstance()
         {
-
-            txtEntityTypeValue.Text = "";
-            txtInstanceIdValue.Text = "";
-            txtRelationValue.Text = "";
-            dgvAttributes.Rows.Clear();
-            dgvRelations.Rows.Clear();
-            dgvParents.Rows.Clear();
+            usrEntityViewer.Clear();
         }
-
 
         void PopulateTreeView(string xml)
         {
@@ -65,14 +52,14 @@ namespace AggregateReader
             ClearInstance();
             try
             {
-
                 if (string.IsNullOrWhiteSpace(xml)) return;
 
                 (BlueriqAggregate aggregate, IBlueriqParser parser) = ParserFactory.Parse(xml);
 
                 chkShowRootEntitiesOnly.Enabled = parser.CanIdentifyRootNodes;
                 if (!parser.CanIdentifyRootNodes) chkShowRootEntitiesOnly.Checked = false;
-                dgvParents.Columns[2].Visible = parser.CanIdentifyRootNodes;
+
+                usrEntityViewer.CanNavigateToParentRelations = parser.CanIdentifyRootNodes;
 
                 TreeViewBuilder.BuildTreeViewHierarchical(treInstanceOverviewHierarchical, aggregate, chkShowRootEntitiesOnly.Checked);
             }
@@ -93,30 +80,15 @@ namespace AggregateReader
         {
             ClearInstance();
 
-            if (e.Node == null || e.Node.Tag == null) return;
+            if (e?.Node?.Tag is not BlueriqEntity entity) return;
 
-            TreeNode nodeInitial = e.Node;
-
-            if (nodeInitial.Tag.GetType() != typeof(BlueriqEntity)) return;
-
-            BlueriqEntity? entity = (BlueriqEntity)nodeInitial.Tag; ;
-
-            if (entity == null) return;
-
-
-            txtRelationValue.Text = GetRelationPath(nodeInitial);
-            txtEntityTypeValue.Text = entity.Type;
-            txtInstanceIdValue.Text = entity.Id;
-
-            PopulateDataGridViewAttributes(dgvAttributes, entity.Attributes);
-            PopulateDataGridViewRelations(dgvRelations, entity);
-            PopulateDataGridViewParents(dgvParents, entity);
+            usrEntityViewer.UpdateEntity(entity, GetRelationPath(e.Node));
         }
 
         private static string GetRelationPath(TreeNode nodeInitial)
         {
 
-            if (nodeInitial.Parent.Tag != null && nodeInitial.Parent.Tag.GetType() == typeof(BlueriqRelation))
+            if (nodeInitial.Parent.Tag?.GetType() == typeof(BlueriqRelation))
             {
                 nodeInitial = nodeInitial.Parent;
             }
@@ -160,86 +132,7 @@ namespace AggregateReader
             return relationPath;
         }
 
-        public void PopulateDataGridViewAttributes(DataGridView dataGridView, List<BlueriqAttribute> attributes)
-        {
-            // Populate data
-            foreach (var attribute in attributes)
-            {
-                if (attribute.Values == null || attribute.Values.Count == 0 && chkOnlyShowAttributesHavingAValue.Checked) continue;
-
-                // If attribute has multiple values, join them with new lines
-                string valuesString = attribute.Values != null ? string.Join(Environment.NewLine, attribute.Values) : string.Empty;
-                string derivationDescription = attribute.DerivationType switch
-                {
-                    DerivationType.UserSet => "User set",
-                    DerivationType.DerivedUnknown => "Unknown",
-                    DerivationType.DerivedSystem => "System",
-                    DerivationType.DerivedDefaultValue => "Default",
-                    null => string.Empty,
-                    _ => string.Empty,
-                };
-                dataGridView.Rows.Add(attribute.Name, valuesString, derivationDescription);
-            }
-            dataGridView.ClearSelection();
-            dataGridView.Tag = attributes;
-        }
-        public static void PopulateDataGridViewRelations(DataGridView dataGridView, BlueriqEntity entity)
-        {
-            // Populate data
-            foreach (var relation in entity.Relations)
-            {
-                // If attribute has multiple values, join them with new lines
-                string valuesString = relation.Values != null ? string.Join(Environment.NewLine, relation.Values) : string.Empty;
-                string relationType = relation.Children != null && relation.Children.Count > 0 ? relation.Children[0].Type : string.Empty;
-
-                DataGridViewRow row = new();
-                row.CreateCells(dataGridView);
-                row.Cells[0].Value = relation.Name;
-                row.Cells[1].Value = relationType;
-                row.Cells[2].Value = valuesString;
-                row.Cells[3].Value = "Select";
-                row.Tag = relation;
-
-                dataGridView.Rows.Add(row);
-            }
-            dataGridView.ClearSelection();
-        }
-        public static void PopulateDataGridViewParents(DataGridView dataGridView, BlueriqEntity entity)
-        {
-            if (entity.ParentRelations == null) return;
-
-            // Populate data
-            foreach (var relation in entity.ParentRelations)
-            {
-                DataGridViewRow row = new();
-                row.CreateCells(dataGridView);
-                row.Cells[0].Value = relation.ParentEntity.Type + "." + relation.Name;
-                row.Cells[1].Value = relation.ParentEntity.Id;
-                row.Cells[2].Value = "Select";
-                row.Tag = relation;
-                dataGridView.Rows.Add(row);
-            }
-            dataGridView.ClearSelection();
-        }
-
-        private void DataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (sender is not DataGridView dataGridView) return;
-
-            // Check if the click is on the button column
-            if (((dataGridView.Name == "dgvRelations" && e.ColumnIndex == 3) || (dataGridView.Name == "dgvParents" && e.ColumnIndex == 2))
-                && e.RowIndex >= 0)
-            {
-                // Retrieve the attribute object from the row's tag
-                BlueriqRelation? relation = dataGridView.Rows[e.RowIndex].Tag as BlueriqRelation;
-
-                // Handle the button click event
-                SelectTreeViewNode(treInstanceOverviewHierarchical, relation);
-
-            }
-        }
-
-        private static void SelectTreeViewNode(TreeView treeView, BlueriqRelation? relation)
+        private static void SelectTreeViewNode(TreeView treeView, BlueriqRelation relation, BlueriqEntity? entity)
         {
             // Iterate through all nodes in the TreeView
             foreach (TreeNode node in treeView.Nodes)
@@ -247,19 +140,31 @@ namespace AggregateReader
                 TreeNode? foundNode = FindNode(node, relation);
                 if (foundNode != null)
                 {
-                    if (true || foundNode.Nodes.Count == 0)
+                    if (entity == null)
                     {
+                        //Select the relation and open it
                         treeView.SelectedNode = foundNode;
                         foundNode.EnsureVisible();
+                        if (foundNode.Nodes.Count > 0)
+                        {
+                            foundNode.Nodes[0].EnsureVisible();
+                        }
                     }
                     else
                     {
-                        // TODO: select the child node in case multiple children are present
-                        foreach (TreeNode childNode in foundNode.Nodes)
+                        //Select the entity
+                        if (foundNode.Nodes.Count > 0)
                         {
-                            //if (childNode.Tag = relation.)
-                            {
+                            //Make sure the nodes are loaded and their tags are set
+                            foundNode.Nodes[0].EnsureVisible();
+                            Application.DoEvents();
 
+                            foreach (TreeNode childNode in foundNode.Nodes)
+                            {
+                                if (childNode.Tag is BlueriqEntity entityChildNode && entityChildNode == entity)
+                                {
+                                    treeView.SelectedNode = childNode;
+                                }
                             }
                         }
                     }
@@ -296,14 +201,6 @@ namespace AggregateReader
         private void ChkShowRootEntitiesOnly_CheckedChanged(object sender, EventArgs e)
         {
             BtnRead_Click(sender, e);
-        }
-
-        private void ChkOnlyShowAttributesHavingAValue_CheckedChanged(object sender, EventArgs e)
-        {
-            if (dgvAttributes.Tag == null) return;
-
-            dgvAttributes.Rows.Clear();
-            PopulateDataGridViewAttributes(dgvAttributes, (List<BlueriqAttribute>)dgvAttributes.Tag);
         }
     }
 }
