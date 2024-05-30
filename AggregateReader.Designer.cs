@@ -142,7 +142,7 @@ namespace AggregateReader
             // 
             // lblVersion
             // 
-            lblVersion.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            lblVersion.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             lblVersion.BackColor = SystemColors.Control;
             lblVersion.ForeColor = Color.Silver;
             lblVersion.Location = new Point(330, 0);
