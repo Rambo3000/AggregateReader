@@ -43,18 +43,18 @@ namespace AggregateReader.Helpers
                     };
                     rootNode.Nodes.Add(typeNode);
 
+                    List<BlueriqEntity> entitiesSorted = [.. group];
+                    entitiesSorted.Sort();
+
                     // List to hold the entity nodes
                     List<TreeNode> entityNodes = [];
 
-                    foreach (var entity in group)
+                    foreach (BlueriqEntity entity in entitiesSorted)
                     {
                         TreeNode entityNode = CreateEntityNode(entity);
                         entityNodes.Add(entityNode);
                         AddPlaceholderNodes(entityNode, entity, treeView);
                     }
-
-                    // Sort the entity nodes by their Text property
-                    entityNodes = [.. entityNodes.OrderBy(n => n.Text)];
 
                     // Add sorted entity nodes to the type node
                     foreach (TreeNode entityNode in entityNodes)
