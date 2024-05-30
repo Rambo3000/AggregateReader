@@ -1,6 +1,5 @@
 ﻿using AggregateReader.BlueriqObjects;
 using AggregateReader.Parsers.XmlAggregate;
-using System;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 
@@ -113,6 +112,8 @@ namespace AggregateReader.Parsers.XmlProfileExport
                     }
                 }
                 relation.Values = parsedValues;
+
+                SetAttributeDerivationType(xmlAttribute, relation);
             }
             else
             {
@@ -125,10 +126,7 @@ namespace AggregateReader.Parsers.XmlProfileExport
                     Values = []
                 };
 
-                if (xmlAttribute.Source == "USER") attribute.DerivationType = DerivationType.UserSet;
-                if (xmlAttribute.Source == "UNKNOWN") attribute.DerivationType = DerivationType.DerivedUnknown;
-                if (xmlAttribute.Source == "DEFAULT") attribute.DerivationType = DerivationType.DerivedDefaultValue;
-                if (xmlAttribute.Source == "SYSTEM") attribute.DerivationType = DerivationType.DerivedSystem;
+                SetAttributeDerivationType(xmlAttribute, attribute);
 
                 if (xmlAttribute.Values != null) attribute.Values = xmlAttribute.Values;
                 if (xmlAttribute.Value != null) attribute.Values.Add(xmlAttribute.Value);
@@ -137,6 +135,14 @@ namespace AggregateReader.Parsers.XmlProfileExport
             }
 
 
+        }
+
+        private static void SetAttributeDerivationType(XmlProfileExportAttribute xmlAttribute, BlueriqAttribute attribute)
+        {
+            if (xmlAttribute.Source == "USER") attribute.DerivationType = DerivationType.UserSet;
+            if (xmlAttribute.Source == "UNKNOWN") attribute.DerivationType = DerivationType.DerivedUnknown;
+            if (xmlAttribute.Source == "DEFAULT") attribute.DerivationType = DerivationType.DerivedDefaultValue;
+            if (xmlAttribute.Source == "SYSTEM") attribute.DerivationType = DerivationType.DerivedSystem;
         }
 
         public bool CanParse(string xml)

@@ -119,6 +119,13 @@ namespace AggregateReader.Parsers.XmlAggregate
                     entity.OnlyOneInstanceOfThisTypeExists = group.Count() == 1;
                 }
             }
+            foreach (BlueriqEntity entity in aggregate.Entities)
+            {
+                foreach (BlueriqRelation relation in entity.Relations)
+                {
+                    relation.Children?.Sort();
+                }
+            }
         }
 
         public bool CanParse(string xml)
@@ -142,9 +149,9 @@ namespace AggregateReader.Parsers.XmlAggregate
 
         public static void PopulateRelationChildren(BlueriqAggregate aggregate)
         {
-            foreach (var entity in aggregate.Entities)
+            foreach (BlueriqEntity entity in aggregate.Entities)
             {
-                foreach (var relation in entity.Relations)
+                foreach (BlueriqRelation relation in entity.Relations)
                 {
                     // Check if relation has values
                     if (relation.Values != null && relation.Values.Count != 0)

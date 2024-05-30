@@ -30,7 +30,7 @@ namespace AggregateReader
 
         private void BtnRead_Click(object sender, EventArgs e)
         {
-            txtXMLInput.Text = FormatXml(txtXMLInput.Text);
+            txtXMLInput.Text = XmlHelper.PrettyPrint(txtXMLInput.Text);
             PopulateTreeView(txtXMLInput.Text);
         }
         public void Clear()
@@ -58,19 +58,6 @@ namespace AggregateReader
             dgvParents.Rows.Clear();
         }
 
-        static string FormatXml(string xml)
-        {
-            try
-            {
-                XDocument doc = XDocument.Parse(xml);
-                return doc.ToString();
-            }
-            catch (Exception)
-            {
-                // Handle and throw if fatal exception here; don't just ignore them
-                return xml;
-            }
-        }
 
         void PopulateTreeView(string xml)
         {
@@ -91,7 +78,7 @@ namespace AggregateReader
             }
             catch (Exception ex)
             {
-                if (!IsValidXml(xml))
+                if (!XmlHelper.IsValidXml(xml))
                 {
                     MessageBox.Show("The provided XML is not valid, please provide valid XML");
                 }
@@ -99,19 +86,6 @@ namespace AggregateReader
                 {
                     MessageBox.Show(ex.Message);
                 }
-            }
-        }
-        public static bool IsValidXml(string xml)
-        {
-            try
-            {
-                XmlDocument xmlDoc = new();
-                xmlDoc.LoadXml(xml);
-                return true; // XML is valid
-            }
-            catch (XmlException)
-            {
-                return false; // XML is not valid
             }
         }
 

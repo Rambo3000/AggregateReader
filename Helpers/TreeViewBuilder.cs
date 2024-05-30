@@ -19,17 +19,17 @@ namespace AggregateReader.Helpers
             // Attach the BeforeExpand event handler
             treeView.BeforeExpand += TreeView_BeforeExpand;
 
-            // Group entities by type
+            // Group entities by type and optionally filter on root entries
             var groupedEntities = aggregate.Entities.Where(e => e.IsRootItem || showOnlyRootEntities == false).GroupBy(e => e.Type);
 
-            foreach (var group in groupedEntities)
+            foreach (IGrouping<string, BlueriqEntity> group in groupedEntities)
             {
                 if (group.Key == null) continue;
 
-                if (group.Count() == 1 && group.First().OnlyOneInstanceOfThisTypeExists)
+                if (group.Count() == 1)
                 {
                     // Only one instance of this type, add directly
-                    var entity = group.First();
+                    BlueriqEntity entity = group.First();
                     TreeNode entityNode = CreateEntityNode(entity);
                     rootNode.Nodes.Add(entityNode);
                     AddPlaceholderNodes(entityNode, entity, treeView);
@@ -43,11 +43,23 @@ namespace AggregateReader.Helpers
                     };
                     rootNode.Nodes.Add(typeNode);
 
+                    // List to hold the entity nodes
+                    List<TreeNode> entityNodes = [];
+
                     foreach (var entity in group)
                     {
                         TreeNode entityNode = CreateEntityNode(entity);
-                        typeNode.Nodes.Add(entityNode);
+                        entityNodes.Add(entityNode);
                         AddPlaceholderNodes(entityNode, entity, treeView);
+                    }
+
+                    // Sort the entity nodes by their Text property
+                    entityNodes = [.. entityNodes.OrderBy(n => n.Text)];
+
+                    // Add sorted entity nodes to the type node
+                    foreach (TreeNode entityNode in entityNodes)
+                    {
+                        typeNode.Nodes.Add(entityNode);
                     }
                 }
             }
@@ -65,26 +77,6 @@ namespace AggregateReader.Helpers
             };
         }
 
-        private static void AddPlaceholderNodes(TreeNode entityNode, BlueriqEntity entity, TreeView treeView)
-        {
-            foreach (var relation in entity.Relations)
-            {
-                TreeNode relationNode = new(relation.Name)
-                {
-                    Tag = relation,
-                    NodeFont = new Font(treeView.Font, FontStyle.Italic)
-                    //ForeColor = Color.DimGray
-                };
-
-                // Add a placeholder node if there are children
-                if (relation.Children != null && relation.Children.Count > 0)
-                {
-                    relationNode.Nodes.Add(new TreeNode("Loading..."));
-                }
-
-                entityNode.Nodes.Add(relationNode);
-            }
-        }
         private static void TreeView_BeforeExpand(object? sender, TreeViewCancelEventArgs e)
         {
             if (e.Node == null) return;
@@ -95,12 +87,7 @@ namespace AggregateReader.Helpers
             if (currentNode.Nodes.Count == 1 && currentNode.Nodes[0].Text == "Loading...")
             {
                 currentNode.Nodes.Clear(); // Remove the placeholder
-
-                if (currentNode.Tag is BlueriqEntity entity)
-                {
-                    PopulateEntityNode(currentNode, entity);
-                }
-                else if (currentNode.Tag is BlueriqRelation relation)
+                if (currentNode.Tag is BlueriqRelation relation)
                 {
                     if (relation.Children != null)
                     {
@@ -114,50 +101,24 @@ namespace AggregateReader.Helpers
                 }
             }
         }
-
-        private static void PopulateEntityNode(TreeNode entityNode, BlueriqEntity entity)
+        private static void AddPlaceholderNodes(TreeNode entityNode, BlueriqEntity entity, TreeView treeView)
         {
             foreach (var relation in entity.Relations)
             {
-                if (relation.Children == null || relation.Children.Count == 0)
-                {
-                    TreeNode newNode = new($"{relation.Name} (entiteit niet gevonden!)")
-                    {
-                        Tag = relation
-                    };
-                    entityNode.Nodes.Add(newNode);
-                    continue;
-                }
-
-                string count = relation.Children.Count == 1 ? "" : $" ({relation.Children.Count})";
-                string entityType =
-                    relation.Children.Count == 1
-                    && (!relation.Children[0].OnlyOneInstanceOfThisTypeExists || relation.Name != relation.Children[0].Type)
-                    ? $" ({relation.Children[0]})" : "";
-
-                TreeNode relationNode = new($"{relation.Name}{entityType}{count}")
+                TreeNode relationNode = new(relation.Name)
                 {
                     Tag = relation,
-                    ForeColor = Color.Red
+                    NodeFont = new Font(treeView.Font, FontStyle.Italic),
+                    ForeColor = Color.DimGray
                 };
-                entityNode.Nodes.Add(relationNode);
 
-                if (relation.Children != null)
+                // Add a placeholder node if there are children
+                if (relation.Children != null && relation.Children.Count > 0)
                 {
-                    if (relation.Children.Count == 1)
-                    {
-                        PopulateEntityNode(relationNode, relation.Children[0]);
-                    }
-                    else
-                    {
-                        foreach (var childEntity in relation.Children)
-                        {
-                            TreeNode childEntityNode = CreateEntityNode(childEntity);
-                            relationNode.Nodes.Add(childEntityNode);
-                            AddPlaceholderNodes(childEntityNode, childEntity, entityNode.TreeView);
-                        }
-                    }
+                    relationNode.Nodes.Add(new TreeNode("Loading..."));
                 }
+
+                entityNode.Nodes.Add(relationNode);
             }
         }
     }

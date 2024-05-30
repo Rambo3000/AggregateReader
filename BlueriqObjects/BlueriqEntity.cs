@@ -42,7 +42,7 @@
         {
             if (other == null) return 1;
 
-            return string.Compare(Type, other.Type, StringComparison.Ordinal);
+            return string.Compare(Type + Index, other.Type + Index, StringComparison.Ordinal);
         }
     }
 }
