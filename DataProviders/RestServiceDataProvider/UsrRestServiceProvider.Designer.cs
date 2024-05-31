@@ -55,7 +55,7 @@
             urlSelector.Name = "urlSelector";
             urlSelector.Size = new Size(148, 23);
             urlSelector.TabIndex = 1;
-            urlSelector.SelectedIndexChanged += urlSelector_SelectedIndexChanged;
+            urlSelector.SelectedIndexChanged += UrlSelector_SelectedIndexChanged;
             // 
             // txtId
             // 

@@ -12,8 +12,7 @@ namespace AggregateReader
     public partial class AggregateReader : Form
     {
 
-        private AggregateReaderConfig? config;
-        private Dictionary<string, DataProviderFactory> factories;
+        private readonly AggregateReaderConfig? config;
 
         public AggregateReader()
         {
@@ -36,10 +35,10 @@ namespace AggregateReader
             if (!Debugger.IsAttached) txtXMLInput.Text = string.Empty;
         }
 
-        private void UsrRestServiceProvider_XmlDataFetched(object? sender, string e)
+        private void UsrRestServiceProvider_XmlDataFetched(object? sender, string xml)
         {
-            txtXMLInput.Text = e;
-            BtnRead_Click(null, null);
+            txtXMLInput.Text = xml;
+            PopulateTreeView(xml);
         }
 
         private void UsrEntityViewer_NavigateToRelationEvent(object sender, BlueriqRelation relation, BlueriqEntity? entity)

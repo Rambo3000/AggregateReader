@@ -1,14 +1,5 @@
 ﻿using AggregateReader.DataProviders;
 using AggregateReader.DataProviders.RestServiceDataProvider;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace AggregateReader
 {
@@ -33,12 +24,14 @@ namespace AggregateReader
         public void LoadConfig(AggregateReaderConfig config)
         {
             Config = config;
-            Factories = new Dictionary<string, DataProviderFactory>();
+            Factories = [];
+
+            if (config.UrlConfigs == null) return;
 
             foreach (UrlConfig urlConfig in config.UrlConfigs)
             {
-                urlSelector.Items.Add(urlConfig.Name);
-                Factories[urlConfig.Name] = new RestServiceProviderFactory(urlConfig);
+                urlSelector.Items.Add(urlConfig.Name?? string.Empty);
+                Factories[urlConfig.Name ?? string.Empty] = new RestServiceProviderFactory(urlConfig);
             }
             if (urlSelector.Items.Count > 0) urlSelector.SelectedIndex = 0;
         }
@@ -99,7 +92,7 @@ namespace AggregateReader
             finally { btnGetFromUrl.Enabled = true; }
         }
 
-        private void urlSelector_SelectedIndexChanged(object sender, EventArgs e)
+        private void UrlSelector_SelectedIndexChanged(object sender, EventArgs e)
         {
             RestServiceProviderFactory? factory = GetRestServiceProviderFactory();
             lblId.Text = factory == null ? "" : factory.UrlConfig.ParameterName;

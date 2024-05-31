@@ -147,7 +147,7 @@ namespace AggregateReader
             chkShowRelations.TabIndex = 13;
             chkShowRelations.Text = "Show relations";
             chkShowRelations.UseVisualStyleBackColor = true;
-            chkShowRelations.CheckedChanged += chkShowRelations_CheckedChanged;
+            chkShowRelations.CheckedChanged += ChkShowRelations_CheckedChanged;
             // 
             // chkOnlyShowAttributesHavingAValue
             // 

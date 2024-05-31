@@ -171,7 +171,7 @@ namespace AggregateReader
             PopulateDataGridViewAttributes(dgvAttributes, (List<BlueriqAttribute>)dgvAttributes.Tag);
         }
 
-        private void chkShowRelations_CheckedChanged(object sender, EventArgs e)
+        private void ChkShowRelations_CheckedChanged(object sender, EventArgs e)
         {
             scAttributesAndOthers.Panel2Collapsed = !chkShowRelations.Checked;
         }
