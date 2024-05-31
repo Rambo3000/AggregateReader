@@ -3,8 +3,6 @@ using AggregateReader.Parsers;
 using System.Diagnostics;
 using TreeView = System.Windows.Forms.TreeView;
 using AggregateReader.Helpers;
-using AggregateReader.DataProviders;
-using AggregateReader.DataProviders.RestServiceDataProvider;
 using AggregateReader.Config;
 
 namespace AggregateReader

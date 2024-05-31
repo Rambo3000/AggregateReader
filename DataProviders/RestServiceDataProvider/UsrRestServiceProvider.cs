@@ -1,4 +1,5 @@
-﻿using AggregateReader.DataProviders;
+﻿using AggregateReader.Config;
+using AggregateReader.DataProviders;
 using AggregateReader.DataProviders.RestServiceDataProvider;
 
 namespace AggregateReader

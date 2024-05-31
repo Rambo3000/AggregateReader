@@ -1,6 +1,6 @@
 ﻿using AggregateReader.DataProviders.RestServiceDataProvider;
 
-namespace AggregateReader.DataProviders
+namespace AggregateReader.Config
 {
     public class AggregateReaderConfig
     {
