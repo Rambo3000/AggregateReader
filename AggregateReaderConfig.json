@@ -1,0 +1,19 @@
+﻿{
+  "urlConfigs": [
+    {
+      "name": "Service1",
+      "method": "GET",
+      "url": "https://example.com/api/resourceid=[[id]]",
+      "jsonPath": "$.ProfileExport",
+      "parameterName": "Zaaknummer"
+    },
+    {
+      "name": "Service2",
+      "method": "POST",
+      "url": "https://example.com/api/resource",
+      "jsonPath": "$.data.content",
+      "bodyTemplate": "{\"zaaknummer\": \"[[id]]\"}",
+      "parameterName": "Zaaknummer"
+    }
+  ]
+}

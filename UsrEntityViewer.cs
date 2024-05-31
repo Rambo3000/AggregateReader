@@ -28,6 +28,7 @@ namespace AggregateReader
             dgvAttributes.LostFocus += (sender, e) => dgvAttributes.ClearSelection();
             dgvRelations.LostFocus += (sender, e) => dgvRelations.ClearSelection();
             dgvParents.LostFocus += (sender, e) => dgvParents.ClearSelection();
+            chkShowRelations.Checked = false;
         }
         private static void SetDataGridViewDefaultStyle(DataGridView dataGridView)
         {
@@ -168,6 +169,11 @@ namespace AggregateReader
 
             dgvAttributes.Rows.Clear();
             PopulateDataGridViewAttributes(dgvAttributes, (List<BlueriqAttribute>)dgvAttributes.Tag);
+        }
+
+        private void chkShowRelations_CheckedChanged(object sender, EventArgs e)
+        {
+            scAttributesAndOthers.Panel2Collapsed = !chkShowRelations.Checked;
         }
     }
 }

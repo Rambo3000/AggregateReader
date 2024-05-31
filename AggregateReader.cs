@@ -3,17 +3,23 @@ using AggregateReader.Parsers;
 using System.Diagnostics;
 using TreeView = System.Windows.Forms.TreeView;
 using AggregateReader.Helpers;
-using System.Windows.Forms;
+using AggregateReader.DataProviders;
+using AggregateReader.DataProviders.RestServiceDataProvider;
+using AggregateReader.Config;
 
 namespace AggregateReader
 {
     public partial class AggregateReader : Form
     {
+
+        private AggregateReaderConfig? config;
+        private Dictionary<string, DataProviderFactory> factories;
+
         public AggregateReader()
         {
             InitializeComponent();
             usrEntityViewer.NavigateToRelationEvent += UsrEntityViewer_NavigateToRelationEvent;
-
+            usrRestServiceProvider.XmlDataFetched += UsrRestServiceProvider_XmlDataFetched;
             string version = Application.ProductVersion;
             const string versionSeperator = "+";
             if (version.Contains(versionSeperator))
@@ -23,7 +29,17 @@ namespace AggregateReader
 
             lblVersion.Text = "v" + version;
 
+            config = ConfigManager.LoadConfig("AggregateReaderConfig.json");
+
+            usrRestServiceProvider.LoadConfig(config);
+
             if (!Debugger.IsAttached) txtXMLInput.Text = string.Empty;
+        }
+
+        private void UsrRestServiceProvider_XmlDataFetched(object? sender, string e)
+        {
+            txtXMLInput.Text = e;
+            BtnRead_Click(null, null);
         }
 
         private void UsrEntityViewer_NavigateToRelationEvent(object sender, BlueriqRelation relation, BlueriqEntity? entity)

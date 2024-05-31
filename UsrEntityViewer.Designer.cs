@@ -30,22 +30,23 @@ namespace AggregateReader
         /// </summary>
         private void InitializeComponent()
         {
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle8 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle7 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle9 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle10 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle11 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle12 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle13 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle15 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle14 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle16 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle17 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle19 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle18 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle20 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle21 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle22 = new DataGridViewCellStyle();
             txtInstanceIdValue = new TextBox();
             txtEntityTypeValue = new TextBox();
             txtRelationValue = new TextBox();
             lblRelation = new Label();
             scAttributesAndOthers = new SplitContainer();
+            chkShowRelations = new CheckBox();
             chkOnlyShowAttributesHavingAValue = new CheckBox();
             dgvAttributes = new DataGridView();
             Attribute = new DataGridViewTextBoxColumn();
@@ -58,11 +59,11 @@ namespace AggregateReader
             Id = new DataGridViewTextBoxColumn();
             Goto2 = new DataGridViewButtonColumn();
             dgvParents = new DataGridView();
-            lblEntity = new Label();
-            lblId = new Label();
             dataGridViewTextBoxColumn3 = new DataGridViewTextBoxColumn();
             dataGridViewTextBoxColumn5 = new DataGridViewTextBoxColumn();
             Goto = new DataGridViewButtonColumn();
+            lblEntity = new Label();
+            lblId = new Label();
             ((System.ComponentModel.ISupportInitialize)scAttributesAndOthers).BeginInit();
             scAttributesAndOthers.Panel1.SuspendLayout();
             scAttributesAndOthers.Panel2.SuspendLayout();
@@ -124,21 +125,35 @@ namespace AggregateReader
             // 
             // scAttributesAndOthers.Panel1
             // 
+            scAttributesAndOthers.Panel1.Controls.Add(chkShowRelations);
             scAttributesAndOthers.Panel1.Controls.Add(chkOnlyShowAttributesHavingAValue);
             scAttributesAndOthers.Panel1.Controls.Add(dgvAttributes);
             // 
             // scAttributesAndOthers.Panel2
             // 
             scAttributesAndOthers.Panel2.Controls.Add(scRelationsAndParents);
+            scAttributesAndOthers.Panel2Collapsed = true;
             scAttributesAndOthers.Size = new Size(423, 435);
             scAttributesAndOthers.SplitterDistance = 239;
             scAttributesAndOthers.TabIndex = 11;
+            // 
+            // chkShowRelations
+            // 
+            chkShowRelations.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            chkShowRelations.AutoSize = true;
+            chkShowRelations.Location = new Point(3, 413);
+            chkShowRelations.Name = "chkShowRelations";
+            chkShowRelations.Size = new Size(103, 19);
+            chkShowRelations.TabIndex = 13;
+            chkShowRelations.Text = "Show relations";
+            chkShowRelations.UseVisualStyleBackColor = true;
+            chkShowRelations.CheckedChanged += chkShowRelations_CheckedChanged;
             // 
             // chkOnlyShowAttributesHavingAValue
             // 
             chkOnlyShowAttributesHavingAValue.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             chkOnlyShowAttributesHavingAValue.AutoSize = true;
-            chkOnlyShowAttributesHavingAValue.Location = new Point(3, 218);
+            chkOnlyShowAttributesHavingAValue.Location = new Point(112, 414);
             chkOnlyShowAttributesHavingAValue.Name = "chkOnlyShowAttributesHavingAValue";
             chkOnlyShowAttributesHavingAValue.Size = new Size(214, 19);
             chkOnlyShowAttributesHavingAValue.TabIndex = 12;
@@ -152,22 +167,22 @@ namespace AggregateReader
             dgvAttributes.AllowUserToDeleteRows = false;
             dgvAttributes.AllowUserToOrderColumns = true;
             dgvAttributes.AllowUserToResizeRows = false;
-            dataGridViewCellStyle1.BackColor = Color.FromArgb(250, 250, 250);
-            dgvAttributes.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle12.BackColor = Color.FromArgb(250, 250, 250);
+            dgvAttributes.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle12;
             dgvAttributes.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dgvAttributes.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvAttributes.BackgroundColor = SystemColors.Window;
             dgvAttributes.BorderStyle = BorderStyle.None;
             dgvAttributes.CellBorderStyle = DataGridViewCellBorderStyle.None;
             dgvAttributes.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = SystemColors.Control;
-            dataGridViewCellStyle2.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            dataGridViewCellStyle2.ForeColor = SystemColors.WindowText;
-            dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
-            dgvAttributes.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle13.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle13.BackColor = SystemColors.Control;
+            dataGridViewCellStyle13.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            dataGridViewCellStyle13.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle13.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle13.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle13.WrapMode = DataGridViewTriState.True;
+            dgvAttributes.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle13;
             dgvAttributes.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvAttributes.Columns.AddRange(new DataGridViewColumn[] { Attribute, Value, Derivation });
             dgvAttributes.GridColor = SystemColors.Window;
@@ -175,10 +190,10 @@ namespace AggregateReader
             dgvAttributes.Name = "dgvAttributes";
             dgvAttributes.RowHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
             dgvAttributes.RowHeadersVisible = false;
-            dataGridViewCellStyle4.WrapMode = DataGridViewTriState.False;
-            dgvAttributes.RowsDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle15.WrapMode = DataGridViewTriState.False;
+            dgvAttributes.RowsDefaultCellStyle = dataGridViewCellStyle15;
             dgvAttributes.RowTemplate.Height = 20;
-            dgvAttributes.Size = new Size(423, 212);
+            dgvAttributes.Size = new Size(423, 408);
             dgvAttributes.TabIndex = 11;
             // 
             // Attribute
@@ -190,8 +205,8 @@ namespace AggregateReader
             // 
             // Value
             // 
-            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.False;
-            Value.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle14.WrapMode = DataGridViewTriState.False;
+            Value.DefaultCellStyle = dataGridViewCellStyle14;
             Value.FillWeight = 111.928932F;
             Value.HeaderText = "Value";
             Value.Name = "Value";
@@ -220,7 +235,7 @@ namespace AggregateReader
             // scRelationsAndParents.Panel2
             // 
             scRelationsAndParents.Panel2.Controls.Add(dgvParents);
-            scRelationsAndParents.Size = new Size(423, 192);
+            scRelationsAndParents.Size = new Size(150, 46);
             scRelationsAndParents.SplitterDistance = 89;
             scRelationsAndParents.TabIndex = 0;
             // 
@@ -230,21 +245,21 @@ namespace AggregateReader
             dgvRelations.AllowUserToDeleteRows = false;
             dgvRelations.AllowUserToOrderColumns = true;
             dgvRelations.AllowUserToResizeRows = false;
-            dataGridViewCellStyle5.BackColor = Color.FromArgb(250, 250, 250);
-            dgvRelations.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle16.BackColor = Color.FromArgb(250, 250, 250);
+            dgvRelations.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle16;
             dgvRelations.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvRelations.BackgroundColor = SystemColors.Window;
             dgvRelations.BorderStyle = BorderStyle.None;
             dgvRelations.CellBorderStyle = DataGridViewCellBorderStyle.None;
             dgvRelations.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle6.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = SystemColors.Control;
-            dataGridViewCellStyle6.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            dataGridViewCellStyle6.ForeColor = SystemColors.WindowText;
-            dataGridViewCellStyle6.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle6.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle6.WrapMode = DataGridViewTriState.True;
-            dgvRelations.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle17.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle17.BackColor = SystemColors.Control;
+            dataGridViewCellStyle17.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            dataGridViewCellStyle17.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle17.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle17.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle17.WrapMode = DataGridViewTriState.True;
+            dgvRelations.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle17;
             dgvRelations.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvRelations.Columns.AddRange(new DataGridViewColumn[] { dataGridViewTextBoxColumn1, dataGridViewTextBoxColumn2, Id, Goto2 });
             dgvRelations.Dock = DockStyle.Fill;
@@ -253,8 +268,8 @@ namespace AggregateReader
             dgvRelations.Name = "dgvRelations";
             dgvRelations.RowHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
             dgvRelations.RowHeadersVisible = false;
-            dataGridViewCellStyle8.WrapMode = DataGridViewTriState.False;
-            dgvRelations.RowsDefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle19.WrapMode = DataGridViewTriState.False;
+            dgvRelations.RowsDefaultCellStyle = dataGridViewCellStyle19;
             dgvRelations.RowTemplate.Height = 20;
             dgvRelations.Size = new Size(423, 89);
             dgvRelations.TabIndex = 12;
@@ -268,8 +283,8 @@ namespace AggregateReader
             // 
             // dataGridViewTextBoxColumn2
             // 
-            dataGridViewCellStyle7.WrapMode = DataGridViewTriState.False;
-            dataGridViewTextBoxColumn2.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle18.WrapMode = DataGridViewTriState.False;
+            dataGridViewTextBoxColumn2.DefaultCellStyle = dataGridViewCellStyle18;
             dataGridViewTextBoxColumn2.HeaderText = "Type";
             dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
             dataGridViewTextBoxColumn2.ReadOnly = true;
@@ -296,21 +311,21 @@ namespace AggregateReader
             dgvParents.AllowUserToDeleteRows = false;
             dgvParents.AllowUserToOrderColumns = true;
             dgvParents.AllowUserToResizeRows = false;
-            dataGridViewCellStyle9.BackColor = Color.FromArgb(250, 250, 250);
-            dgvParents.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle20.BackColor = Color.FromArgb(250, 250, 250);
+            dgvParents.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle20;
             dgvParents.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvParents.BackgroundColor = SystemColors.Window;
             dgvParents.BorderStyle = BorderStyle.None;
             dgvParents.CellBorderStyle = DataGridViewCellBorderStyle.None;
             dgvParents.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle10.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle10.BackColor = SystemColors.Control;
-            dataGridViewCellStyle10.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            dataGridViewCellStyle10.ForeColor = SystemColors.WindowText;
-            dataGridViewCellStyle10.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle10.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle10.WrapMode = DataGridViewTriState.True;
-            dgvParents.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle10;
+            dataGridViewCellStyle21.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle21.BackColor = SystemColors.Control;
+            dataGridViewCellStyle21.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            dataGridViewCellStyle21.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle21.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle21.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle21.WrapMode = DataGridViewTriState.True;
+            dgvParents.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle21;
             dgvParents.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvParents.Columns.AddRange(new DataGridViewColumn[] { dataGridViewTextBoxColumn3, dataGridViewTextBoxColumn5, Goto });
             dgvParents.Dock = DockStyle.Fill;
@@ -319,30 +334,12 @@ namespace AggregateReader
             dgvParents.Name = "dgvParents";
             dgvParents.RowHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
             dgvParents.RowHeadersVisible = false;
-            dataGridViewCellStyle11.WrapMode = DataGridViewTriState.False;
-            dgvParents.RowsDefaultCellStyle = dataGridViewCellStyle11;
+            dataGridViewCellStyle22.WrapMode = DataGridViewTriState.False;
+            dgvParents.RowsDefaultCellStyle = dataGridViewCellStyle22;
             dgvParents.RowTemplate.Height = 20;
             dgvParents.Size = new Size(423, 99);
             dgvParents.TabIndex = 13;
             dgvParents.CellContentClick += DataGridView_CellContentClick;
-            // 
-            // lblEntity
-            // 
-            lblEntity.AutoSize = true;
-            lblEntity.Location = new Point(0, 15);
-            lblEntity.Name = "lblEntity";
-            lblEntity.Size = new Size(63, 15);
-            lblEntity.TabIndex = 5;
-            lblEntity.Text = "Entity type";
-            // 
-            // lblId
-            // 
-            lblId.AutoSize = true;
-            lblId.Location = new Point(0, 30);
-            lblId.Name = "lblId";
-            lblId.Size = new Size(61, 15);
-            lblId.TabIndex = 7;
-            lblId.Text = "InstanceId";
             // 
             // dataGridViewTextBoxColumn3
             // 
@@ -363,6 +360,24 @@ namespace AggregateReader
             Goto.Name = "Goto";
             Goto.Resizable = DataGridViewTriState.False;
             Goto.Width = 50;
+            // 
+            // lblEntity
+            // 
+            lblEntity.AutoSize = true;
+            lblEntity.Location = new Point(0, 15);
+            lblEntity.Name = "lblEntity";
+            lblEntity.Size = new Size(63, 15);
+            lblEntity.TabIndex = 5;
+            lblEntity.Text = "Entity type";
+            // 
+            // lblId
+            // 
+            lblId.AutoSize = true;
+            lblId.Location = new Point(0, 30);
+            lblId.Name = "lblId";
+            lblId.Size = new Size(61, 15);
+            lblId.TabIndex = 7;
+            lblId.Text = "InstanceId";
             // 
             // UsrEntityViewer
             // 
@@ -416,5 +431,6 @@ namespace AggregateReader
         private DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
         private DataGridViewTextBoxColumn dataGridViewTextBoxColumn5;
         private DataGridViewButtonColumn Goto;
+        private CheckBox chkShowRelations;
     }
 }
