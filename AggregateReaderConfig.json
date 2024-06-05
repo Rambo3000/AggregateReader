@@ -1,19 +1,20 @@
-﻿{
-  "urlConfigs": [
+{
+  "UrlConfigs": [
     {
-      "name": "Service1",
-      "method": "GET",
-      "url": "https://example.com/api/resourceid=[[id]]",
-      "jsonPath": "$.ProfileExport",
-      "parameterName": "Zaaknummer"
+      "Name": "ExampleGet",
+      "Method": "GET",
+      "Url": "https://example.com/api/resourceid=[[id]]",
+      "JsonPath": "$.ProfileExport",
+      "BodyTemplate": "",
+      "ParameterName": "Zaaknummer"
     },
     {
-      "name": "Service2",
-      "method": "POST",
-      "url": "https://example.com/api/resource",
-      "jsonPath": "$.data.content",
-      "bodyTemplate": "{\"zaaknummer\": \"[[id]]\"}",
-      "parameterName": "Zaaknummer"
+      "Name": "ExamplePost",
+      "Method": "POST",
+      "Url": "https://example.com/api/resource2",
+      "JsonPath": "$.data.ProfileExport",
+      "BodyTemplate": "{\n  \"zaaknummer\": \"[[id]]\"\n}",
+      "ParameterName": "Zaaknummer"
     }
   ]
 }

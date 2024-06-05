@@ -29,9 +29,10 @@ namespace AggregateReader
 
             if (config.UrlConfigs == null) return;
 
+            urlSelector.Items.Clear();
             foreach (UrlConfig urlConfig in config.UrlConfigs)
             {
-                urlSelector.Items.Add(urlConfig.Name?? string.Empty);
+                urlSelector.Items.Add(urlConfig.Name ?? string.Empty);
                 Factories[urlConfig.Name ?? string.Empty] = new RestServiceProviderFactory(urlConfig);
             }
             if (urlSelector.Items.Count > 0) urlSelector.SelectedIndex = 0;
@@ -97,6 +98,23 @@ namespace AggregateReader
         {
             RestServiceProviderFactory? factory = GetRestServiceProviderFactory();
             lblId.Text = factory == null ? "" : factory.UrlConfig.ParameterName;
+        }
+
+        private void BtnEdit_Click(object sender, EventArgs e)
+        {
+            if (Config == null) return;
+            using UsrEditRestServiceConfig editForm = new(Config);
+            if (editForm.ShowDialog() == DialogResult.OK)
+            {
+                // Reload the combo box with updated config
+                urlSelector.Items.Clear();
+                if (Config == null) return;
+                LoadConfig(Config);
+            }
+            else
+            {
+                Config = ConfigManager.LoadConfig();
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using AggregateReader.Properties;
+using System.Windows.Forms;
 
 namespace AggregateReader
 {
@@ -63,7 +64,7 @@ namespace AggregateReader
             // 
             txtXMLInput.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             txtXMLInput.BorderStyle = BorderStyle.None;
-            txtXMLInput.Location = new Point(6, 47);
+            txtXMLInput.Location = new Point(9, 22);
             txtXMLInput.Name = "txtXMLInput";
             txtXMLInput.Size = new Size(186, 355);
             txtXMLInput.TabIndex = 0;
@@ -72,9 +73,10 @@ namespace AggregateReader
             // 
             // button1
             // 
-            button1.Location = new Point(9, 18);
+            button1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            button1.Location = new Point(114, 379);
             button1.Name = "button1";
-            button1.Size = new Size(75, 23);
+            button1.Size = new Size(78, 23);
             button1.TabIndex = 2;
             button1.Text = "Read";
             button1.UseVisualStyleBackColor = true;
@@ -216,9 +218,9 @@ namespace AggregateReader
             // 
             // btnClear
             // 
-            btnClear.Location = new Point(90, 18);
+            btnClear.Location = new Point(6, 379);
             btnClear.Name = "btnClear";
-            btnClear.Size = new Size(75, 23);
+            btnClear.Size = new Size(69, 23);
             btnClear.TabIndex = 3;
             btnClear.Text = "Clear";
             btnClear.UseVisualStyleBackColor = true;

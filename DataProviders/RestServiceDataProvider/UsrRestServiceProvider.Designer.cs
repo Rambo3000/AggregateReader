@@ -1,4 +1,6 @@
-﻿namespace AggregateReader
+﻿using AggregateReader.Properties;
+
+namespace AggregateReader
 {
     partial class UsrRestServiceProvider
     {
@@ -28,11 +30,14 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             btnGetFromUrl = new Button();
             urlSelector = new ComboBox();
             txtId = new TextBox();
             label1 = new Label();
             lblId = new Label();
+            btnEdit = new Button();
+            toolTip1 = new ToolTip(components);
             SuspendLayout();
             // 
             // btnGetFromUrl
@@ -83,10 +88,28 @@
             lblId.TabIndex = 4;
             lblId.Text = "Id";
             // 
+            // btnEdit
+            // 
+            btnEdit.BackgroundImageLayout = ImageLayout.Center;
+            btnEdit.Image = Resources.cog;
+            btnEdit.Location = new Point(0, 66);
+            btnEdit.Name = "btnEdit";
+            btnEdit.Size = new Size(24, 24);
+            btnEdit.TabIndex = 5;
+            btnEdit.UseVisualStyleBackColor = true;
+            btnEdit.Click += BtnEdit_Click;
+            // 
+            // toolTip1
+            // 
+            toolTip1.AutoPopDelay = 5000;
+            toolTip1.InitialDelay = 0;
+            toolTip1.ReshowDelay = 100;
+            // 
             // UsrRestServiceProvider
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(btnEdit);
             Controls.Add(lblId);
             Controls.Add(label1);
             Controls.Add(txtId);
@@ -105,5 +128,7 @@
         private TextBox txtId;
         private Label label1;
         private Label lblId;
+        private Button btnEdit;
+        private ToolTip toolTip1;
     }
 }

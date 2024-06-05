@@ -26,7 +26,7 @@ namespace AggregateReader
 
             lblVersion.Text = "v" + version;
 
-            config = ConfigManager.LoadConfig("AggregateReaderConfig.json");
+            config = ConfigManager.LoadConfig();
 
             usrRestServiceProvider.LoadConfig(config);
 
@@ -35,7 +35,7 @@ namespace AggregateReader
 
         private void UsrRestServiceProvider_XmlDataFetched(object? sender, string xml)
         {
-            txtXMLInput.Text = xml;
+            txtXMLInput.Text = XmlHelper.PrettyPrint(xml);
             PopulateTreeView(xml);
         }
 
