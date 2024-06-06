@@ -11,6 +11,7 @@ namespace AggregateReader.DataProviders.RestServiceDataProvider
             Config = config;
             InitializeComponent();
             LoadUrlList();
+            this.StartPosition = FormStartPosition.CenterParent;
         }
 
         private void LoadUrlList()

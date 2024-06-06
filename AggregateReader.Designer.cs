@@ -73,7 +73,7 @@ namespace AggregateReader
             // 
             // button1
             // 
-            button1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            button1.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             button1.Location = new Point(114, 379);
             button1.Name = "button1";
             button1.Size = new Size(78, 23);
@@ -218,6 +218,7 @@ namespace AggregateReader
             // 
             // btnClear
             // 
+            btnClear.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             btnClear.Location = new Point(6, 379);
             btnClear.Name = "btnClear";
             btnClear.Size = new Size(69, 23);

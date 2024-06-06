@@ -7,8 +7,15 @@ namespace AggregateReader.Config
         public static readonly string filePath = "AggregateReaderConfig.json";
         public static AggregateReaderConfig LoadConfig()
         {
-            string json = File.ReadAllText(filePath);
-            return JsonConvert.DeserializeObject<AggregateReaderConfig>(json)?? new();
+            try
+            {
+                string json = File.ReadAllText(filePath);
+                return JsonConvert.DeserializeObject<AggregateReaderConfig>(json) ?? new();
+            }
+            catch (Exception)
+            {
+                return new();
+            }
         }
         public static void SaveConfig(AggregateReaderConfig config)
         {

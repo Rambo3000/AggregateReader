@@ -67,17 +67,20 @@ namespace AggregateReader.DataProviders.RestServiceDataProvider
             // 
             // lstNames
             // 
+            lstNames.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
             lstNames.FormattingEnabled = true;
+            lstNames.IntegralHeight = false;
             lstNames.ItemHeight = 15;
             lstNames.Location = new Point(12, 12);
             lstNames.Name = "lstNames";
-            lstNames.Size = new Size(166, 199);
+            lstNames.Size = new Size(166, 189);
             lstNames.TabIndex = 0;
             lstNames.SelectedIndexChanged += LstNames_SelectedIndexChanged_1;
             // 
             // BtnAdd
             // 
-            BtnAdd.Location = new Point(64, 217);
+            BtnAdd.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            BtnAdd.Location = new Point(64, 207);
             BtnAdd.Name = "BtnAdd";
             BtnAdd.Size = new Size(49, 23);
             BtnAdd.TabIndex = 1;
@@ -87,8 +90,9 @@ namespace AggregateReader.DataProviders.RestServiceDataProvider
             // 
             // btnRemove
             // 
+            btnRemove.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             btnRemove.Enabled = false;
-            btnRemove.Location = new Point(119, 217);
+            btnRemove.Location = new Point(119, 207);
             btnRemove.Name = "btnRemove";
             btnRemove.Size = new Size(59, 23);
             btnRemove.TabIndex = 2;
@@ -99,7 +103,7 @@ namespace AggregateReader.DataProviders.RestServiceDataProvider
             // btnCancel
             // 
             btnCancel.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            btnCancel.Location = new Point(429, 336);
+            btnCancel.Location = new Point(501, 280);
             btnCancel.Name = "btnCancel";
             btnCancel.Size = new Size(75, 23);
             btnCancel.TabIndex = 3;
@@ -110,7 +114,7 @@ namespace AggregateReader.DataProviders.RestServiceDataProvider
             // btnOK
             // 
             btnOK.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            btnOK.Location = new Point(510, 336);
+            btnOK.Location = new Point(582, 280);
             btnOK.Name = "btnOK";
             btnOK.Size = new Size(75, 23);
             btnOK.TabIndex = 4;
@@ -120,10 +124,10 @@ namespace AggregateReader.DataProviders.RestServiceDataProvider
             // 
             // txtName
             // 
-            txtName.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             txtName.Location = new Point(136, 0);
+            txtName.MaxLength = 50;
             txtName.Name = "txtName";
-            txtName.Size = new Size(248, 23);
+            txtName.Size = new Size(151, 23);
             txtName.TabIndex = 5;
             txtName.TextChanged += UpdateAfterNewInput;
             // 
@@ -132,13 +136,15 @@ namespace AggregateReader.DataProviders.RestServiceDataProvider
             txtRequestUrl.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             txtRequestUrl.Location = new Point(136, 29);
             txtRequestUrl.Name = "txtRequestUrl";
-            txtRequestUrl.Size = new Size(248, 23);
+            txtRequestUrl.Size = new Size(320, 23);
             txtRequestUrl.TabIndex = 6;
             txtRequestUrl.TextChanged += UpdateAfterNewInput;
             // 
             // txtIdDescription
             // 
-            txtIdDescription.Location = new Point(136, 218);
+            txtIdDescription.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            txtIdDescription.Location = new Point(136, 197);
+            txtIdDescription.MaxLength = 25;
             txtIdDescription.Name = "txtIdDescription";
             txtIdDescription.Size = new Size(247, 23);
             txtIdDescription.TabIndex = 7;
@@ -146,9 +152,10 @@ namespace AggregateReader.DataProviders.RestServiceDataProvider
             // 
             // txtResponseJsonPath
             // 
-            txtResponseJsonPath.Location = new Point(136, 189);
+            txtResponseJsonPath.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            txtResponseJsonPath.Location = new Point(136, 168);
             txtResponseJsonPath.Name = "txtResponseJsonPath";
-            txtResponseJsonPath.Size = new Size(248, 23);
+            txtResponseJsonPath.Size = new Size(319, 23);
             txtResponseJsonPath.TabIndex = 8;
             txtResponseJsonPath.TextChanged += UpdateAfterNewInput;
             // 
@@ -201,18 +208,19 @@ namespace AggregateReader.DataProviders.RestServiceDataProvider
             // 
             // txtRequestBody
             // 
-            txtRequestBody.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            txtRequestBody.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             txtRequestBody.Location = new Point(136, 87);
             txtRequestBody.Name = "txtRequestBody";
-            txtRequestBody.Size = new Size(248, 96);
+            txtRequestBody.Size = new Size(320, 75);
             txtRequestBody.TabIndex = 16;
             txtRequestBody.Text = "";
             txtRequestBody.TextChanged += UpdateAfterNewInput;
             // 
             // label5
             // 
+            label5.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             label5.AutoSize = true;
-            label5.Location = new Point(3, 192);
+            label5.Location = new Point(3, 171);
             label5.Name = "label5";
             label5.Size = new Size(115, 15);
             label5.TabIndex = 17;
@@ -220,8 +228,9 @@ namespace AggregateReader.DataProviders.RestServiceDataProvider
             // 
             // label6
             // 
+            label6.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             label6.AutoSize = true;
-            label6.Location = new Point(3, 221);
+            label6.Location = new Point(3, 200);
             label6.Name = "label6";
             label6.Size = new Size(79, 15);
             label6.TabIndex = 18;
@@ -229,15 +238,16 @@ namespace AggregateReader.DataProviders.RestServiceDataProvider
             // 
             // toolTip
             // 
-            toolTip.AutoPopDelay = 5500;
-            toolTip.InitialDelay = 0;
-            toolTip.ReshowDelay = 110;
+            toolTip.AutomaticDelay = 100;
+            toolTip.AutoPopDelay = 10000;
+            toolTip.InitialDelay = 100;
+            toolTip.ReshowDelay = 20;
             // 
             // pictureBox1
             // 
             pictureBox1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             pictureBox1.Image = Resources.help;
-            pictureBox1.Location = new Point(389, 33);
+            pictureBox1.Location = new Point(461, 33);
             pictureBox1.Name = "pictureBox1";
             pictureBox1.Size = new Size(16, 16);
             pictureBox1.TabIndex = 23;
@@ -248,7 +258,7 @@ namespace AggregateReader.DataProviders.RestServiceDataProvider
             // 
             pictureBox2.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             pictureBox2.Image = Resources.help;
-            pictureBox2.Location = new Point(389, 89);
+            pictureBox2.Location = new Point(461, 89);
             pictureBox2.Name = "pictureBox2";
             pictureBox2.Size = new Size(16, 16);
             pictureBox2.TabIndex = 24;
@@ -257,9 +267,9 @@ namespace AggregateReader.DataProviders.RestServiceDataProvider
             // 
             // pictureBox3
             // 
-            pictureBox3.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            pictureBox3.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             pictureBox3.Image = Resources.help;
-            pictureBox3.Location = new Point(389, 194);
+            pictureBox3.Location = new Point(461, 173);
             pictureBox3.Name = "pictureBox3";
             pictureBox3.Size = new Size(16, 16);
             pictureBox3.TabIndex = 25;
@@ -268,9 +278,9 @@ namespace AggregateReader.DataProviders.RestServiceDataProvider
             // 
             // pictureBox4
             // 
-            pictureBox4.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            pictureBox4.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             pictureBox4.Image = Resources.help;
-            pictureBox4.Location = new Point(389, 223);
+            pictureBox4.Location = new Point(461, 202);
             pictureBox4.Name = "pictureBox4";
             pictureBox4.Size = new Size(16, 16);
             pictureBox4.TabIndex = 26;
@@ -279,6 +289,7 @@ namespace AggregateReader.DataProviders.RestServiceDataProvider
             // 
             // panel1
             // 
+            panel1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             panel1.Controls.Add(pictureBox4);
             panel1.Controls.Add(label1);
             panel1.Controls.Add(pictureBox3);
@@ -298,23 +309,27 @@ namespace AggregateReader.DataProviders.RestServiceDataProvider
             panel1.Enabled = false;
             panel1.Location = new Point(184, 12);
             panel1.Name = "panel1";
-            panel1.Size = new Size(409, 241);
+            panel1.Size = new Size(481, 220);
             panel1.TabIndex = 27;
             // 
             // label7
             // 
+            label7.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             label7.BackColor = SystemColors.Control;
             label7.BorderStyle = BorderStyle.FixedSingle;
-            label7.Location = new Point(12, 268);
+            label7.ForeColor = Color.FromArgb(64, 64, 64);
+            label7.Location = new Point(12, 236);
             label7.Name = "label7";
-            label7.Size = new Size(581, 49);
+            label7.Size = new Size(653, 34);
             label7.TabIndex = 29;
             label7.Text = resources.GetString("label7.Text");
             // 
             // btnUp
             // 
+            btnUp.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            btnUp.Enabled = false;
             btnUp.Image = Resources.up;
-            btnUp.Location = new Point(12, 217);
+            btnUp.Location = new Point(12, 207);
             btnUp.Name = "btnUp";
             btnUp.Size = new Size(22, 23);
             btnUp.TabIndex = 30;
@@ -323,8 +338,10 @@ namespace AggregateReader.DataProviders.RestServiceDataProvider
             // 
             // btnDown
             // 
+            btnDown.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            btnDown.Enabled = false;
             btnDown.Image = Resources.down;
-            btnDown.Location = new Point(36, 217);
+            btnDown.Location = new Point(36, 207);
             btnDown.Name = "btnDown";
             btnDown.Size = new Size(22, 23);
             btnDown.TabIndex = 31;
@@ -335,7 +352,7 @@ namespace AggregateReader.DataProviders.RestServiceDataProvider
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(597, 371);
+            ClientSize = new Size(669, 315);
             Controls.Add(btnDown);
             Controls.Add(btnUp);
             Controls.Add(label7);
@@ -345,9 +362,12 @@ namespace AggregateReader.DataProviders.RestServiceDataProvider
             Controls.Add(BtnAdd);
             Controls.Add(lstNames);
             Controls.Add(panel1);
-            FormBorderStyle = FormBorderStyle.FixedDialog;
+            Icon = (Icon)resources.GetObject("$this.Icon");
+            MaximizeBox = false;
+            MinimizeBox = false;
+            MinimumSize = new Size(685, 350);
             Name = "UsrEditRestServiceConfig";
-            Text = "Edit profile export endpoints";
+            Text = "Configure REST API Endpoints";
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox3).EndInit();
