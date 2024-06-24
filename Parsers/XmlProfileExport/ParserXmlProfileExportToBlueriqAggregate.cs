@@ -151,16 +151,20 @@ namespace AggregateReader.Parsers.XmlProfileExport
             {
                 XDocument doc = XDocument.Parse(xml);
                 var rootElement = doc.Root;
+
                 if (rootElement != null)
                 {
-                    var appName = rootElement.Attribute("appName")?.Value;
-                    return appName == "RootEntry";
+                    bool isProfileElement = rootElement.Name.LocalName == "profile";
+                    bool hasAppName = !string.IsNullOrWhiteSpace(rootElement.Attribute("appName")?.Value);
+
+                    return isProfileElement && hasAppName;
                 }
             }
             catch (Exception)
             {
                 return false;
             }
+
             return false;
         }
 
