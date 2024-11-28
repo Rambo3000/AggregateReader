@@ -5,6 +5,7 @@ using System.Xml.Linq;
 using TreeView = System.Windows.Forms.TreeView;
 using AggregateReader.Helpers;
 using System.Xml;
+using System.ComponentModel;
 
 namespace AggregateReader
 {
@@ -137,6 +138,7 @@ namespace AggregateReader
             }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public bool CanNavigateToParentRelations { get { return dgvParents.Columns[2].Visible; } set { dgvParents.Columns[2].Visible = value; } }
 
         private static TreeNode? FindNode(TreeNode rootNode, BlueriqRelation? relation)
