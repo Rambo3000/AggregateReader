@@ -25,5 +25,4 @@ namespace AggregateReader.Parsers
             throw new InvalidOperationException("No suitable parser found for the provided XML.");
         }
     }
-
 }

@@ -42,8 +42,6 @@ namespace AggregateReader
             lblVersion = new Label();
             usrEntityViewer = new UsrEntityViewer();
             scMain = new SplitContainer();
-            grpRestApi = new GroupBox();
-            usrRestServiceProvider = new UsrRestServiceProvider();
             grpXML = new GroupBox();
             btnClear = new Button();
             ((System.ComponentModel.ISupportInitialize)scTreeviewAndOthers).BeginInit();
@@ -56,7 +54,6 @@ namespace AggregateReader
             scMain.Panel1.SuspendLayout();
             scMain.Panel2.SuspendLayout();
             scMain.SuspendLayout();
-            grpRestApi.SuspendLayout();
             grpXML.SuspendLayout();
             SuspendLayout();
             // 
@@ -66,7 +63,7 @@ namespace AggregateReader
             txtXMLInput.BorderStyle = BorderStyle.None;
             txtXMLInput.Location = new Point(9, 22);
             txtXMLInput.Name = "txtXMLInput";
-            txtXMLInput.Size = new Size(186, 355);
+            txtXMLInput.Size = new Size(186, 477);
             txtXMLInput.TabIndex = 0;
             txtXMLInput.Text = resources.GetString("txtXMLInput.Text");
             txtXMLInput.WordWrap = false;
@@ -74,7 +71,7 @@ namespace AggregateReader
             // button1
             // 
             button1.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            button1.Location = new Point(114, 379);
+            button1.Location = new Point(114, 501);
             button1.Name = "button1";
             button1.Size = new Size(78, 23);
             button1.TabIndex = 2;
@@ -159,7 +156,6 @@ namespace AggregateReader
             // 
             // usrEntityViewer
             // 
-            usrEntityViewer.CanNavigateToParentRelations = true;
             usrEntityViewer.Dock = DockStyle.Fill;
             usrEntityViewer.Location = new Point(3, 19);
             usrEntityViewer.Name = "usrEntityViewer";
@@ -174,7 +170,6 @@ namespace AggregateReader
             // 
             // scMain.Panel1
             // 
-            scMain.Panel1.Controls.Add(grpRestApi);
             scMain.Panel1.Controls.Add(grpXML);
             // 
             // scMain.Panel2
@@ -184,42 +179,23 @@ namespace AggregateReader
             scMain.SplitterDistance = 198;
             scMain.TabIndex = 6;
             // 
-            // grpRestApi
-            // 
-            grpRestApi.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            grpRestApi.Controls.Add(usrRestServiceProvider);
-            grpRestApi.Location = new Point(0, 3);
-            grpRestApi.Name = "grpRestApi";
-            grpRestApi.Size = new Size(198, 113);
-            grpRestApi.TabIndex = 4;
-            grpRestApi.TabStop = false;
-            grpRestApi.Text = "Profile download";
-            // 
-            // usrRestServiceProvider
-            // 
-            usrRestServiceProvider.Dock = DockStyle.Fill;
-            usrRestServiceProvider.Location = new Point(3, 19);
-            usrRestServiceProvider.Name = "usrRestServiceProvider";
-            usrRestServiceProvider.Size = new Size(192, 91);
-            usrRestServiceProvider.TabIndex = 4;
-            // 
             // grpXML
             // 
             grpXML.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             grpXML.Controls.Add(btnClear);
             grpXML.Controls.Add(txtXMLInput);
             grpXML.Controls.Add(button1);
-            grpXML.Location = new Point(0, 122);
+            grpXML.Location = new Point(0, 0);
             grpXML.Name = "grpXML";
-            grpXML.Size = new Size(198, 408);
+            grpXML.Size = new Size(198, 530);
             grpXML.TabIndex = 3;
             grpXML.TabStop = false;
-            grpXML.Text = "Blueriq XML aggregate";
+            grpXML.Text = "Blueriq XML aggregate/profile export";
             // 
             // btnClear
             // 
             btnClear.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            btnClear.Location = new Point(6, 379);
+            btnClear.Location = new Point(6, 501);
             btnClear.Name = "btnClear";
             btnClear.Size = new Size(69, 23);
             btnClear.TabIndex = 3;
@@ -247,7 +223,6 @@ namespace AggregateReader
             scMain.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)scMain).EndInit();
             scMain.ResumeLayout(false);
-            grpRestApi.ResumeLayout(false);
             grpXML.ResumeLayout(false);
             ResumeLayout(false);
         }
@@ -266,7 +241,5 @@ namespace AggregateReader
         private CheckBox chkShowRootEntitiesOnly;
         private UsrEntityViewer usrEntityViewer;
         private Label lblVersion;
-        private UsrRestServiceProvider usrRestServiceProvider;
-        private GroupBox grpRestApi;
     }
 }

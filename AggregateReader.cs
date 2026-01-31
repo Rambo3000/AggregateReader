@@ -3,20 +3,16 @@ using AggregateReader.Parsers;
 using System.Diagnostics;
 using TreeView = System.Windows.Forms.TreeView;
 using AggregateReader.Helpers;
-using AggregateReader.Config;
 
 namespace AggregateReader
 {
     public partial class AggregateReader : Form
     {
 
-        private readonly AggregateReaderConfig? config;
-
         public AggregateReader()
         {
             InitializeComponent();
             usrEntityViewer.NavigateToRelationEvent += UsrEntityViewer_NavigateToRelationEvent;
-            usrRestServiceProvider.XmlDataFetched += UsrRestServiceProvider_XmlDataFetched;
             string version = Application.ProductVersion;
             const string versionSeperator = "+";
             if (version.Contains(versionSeperator))
@@ -26,17 +22,7 @@ namespace AggregateReader
 
             lblVersion.Text = "v" + version;
 
-            config = ConfigManager.LoadConfig();
-
-            usrRestServiceProvider.LoadConfig(config);
-
             if (!Debugger.IsAttached) txtXMLInput.Text = string.Empty;
-        }
-
-        private void UsrRestServiceProvider_XmlDataFetched(object? sender, string xml)
-        {
-            txtXMLInput.Text = XmlHelper.PrettyPrint(xml);
-            PopulateTreeView(xml);
         }
 
         private void UsrEntityViewer_NavigateToRelationEvent(object sender, BlueriqRelation relation, BlueriqEntity? entity)
@@ -109,7 +95,10 @@ namespace AggregateReader
 
         private static string GetRelationPath(TreeNode nodeInitial)
         {
-
+            if (nodeInitial.Tag == null || nodeInitial.Parent == null)
+            {
+                return string.Empty;
+            }
             if (nodeInitial.Parent.Tag?.GetType() == typeof(BlueriqRelation))
             {
                 nodeInitial = nodeInitial.Parent;
@@ -136,7 +125,7 @@ namespace AggregateReader
                     // In case the root items are grouped we can identify that by the string and get the entity by getting the first child
                     if (nodeLoop.Tag.GetType() == typeof(string) && nodeLoop.Nodes.Count > 0 && nodeLoop.Nodes[0].Tag.GetType() == typeof(BlueriqEntity))
                     {
-                        BlueriqEntity entityLoop = (BlueriqEntity)nodeLoop.Nodes[0].Tag;
+                        BlueriqEntity entityLoop = nodeLoop.Nodes[0].Tag as BlueriqEntity;
                         if (nodeLoop.Parent != null && nodeLoop.Parent.Tag != null && nodeLoop.Parent.Tag.GetType() == typeof(BlueriqAggregate))
                         {
                             relationPath = entityLoop.Type + "." + relationPath;
